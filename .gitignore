@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+dist
+.env*
+.DS_Store
+*.log
+.vercel
+next-env.d.ts
+# dados de leads e contatos (não commitar)
+data/leads.json
+data/contacts.json

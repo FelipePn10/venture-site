@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Módulo · VentureERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors:{ bg:'#FAF8EC', paper:'#F4F1DF', surface:'#EBE7CE', ink:'#14201A', muted:'#5F6A5C', line:'#DCD6B8',
+    moss:{50:'#F0F2E0',500:'#5D7822',700:'#324512',800:'#22310F',900:'#17220C'},
+    mustard:{300:'#DCC03B',400:'#CBAB1F'}},
+  fontFamily:{ serif:['"Instrument Serif"','serif'], sans:['Geist','sans-serif'], mono:['"Geist Mono"','monospace']},
+  letterSpacing:{tightest:'-0.045em'}
+}}};
+</script>
+<style>body{font-family:Geist,sans-serif;background:#FAF8EC;color:#14201A;-webkit-font-smoothing:antialiased}</style>
+</head>
+<body>
+<header class="border-b border-line bg-bg/80 backdrop-blur sticky top-0 z-30">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg width="28" height="28" viewBox="0 0 30 30"><path d="M4 5 L15 24 L26 5" fill="none" stroke="#14201A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="6" r="2.6" fill="#CBAB1F"/></svg>
+      <span class="font-serif text-2xl">Venture<span style="color:#CBAB1F">ERP</span></span>
+    </a>
+    <a href="index.html#modulos" class="text-sm text-muted hover:text-ink">← Todos os módulos</a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-7xl px-6 py-20">
+  <a href="index.html#modulos" class="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">·· módulo</a>
+  <h1 id="title" class="mt-3 font-serif text-7xl leading-[1] tracking-tightest">—</h1>
+  <p id="body" class="mt-6 max-w-2xl text-[18px] leading-relaxed text-muted">—</p>
+
+  <div class="mt-10 flex gap-3">
+    <a href="index.html#cta" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm text-bg hover:bg-moss-900">Solicitar demonstração →</a>
+    <a href="cases.html" class="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 text-sm hover:border-ink/50">Ver cases</a>
+  </div>
+
+  <section class="mt-20 grid gap-12 md:grid-cols-2">
+    <div>
+      <h2 class="font-serif text-4xl leading-tight">O que está incluso</h2>
+      <ul id="feats" class="mt-6 space-y-3 text-[16px]"></ul>
+    </div>
+    <div>
+      <h2 class="font-serif text-4xl leading-tight">Como conversa com os outros módulos</h2>
+      <ul id="conn" class="mt-6 space-y-3 text-[16px]"></ul>
+    </div>
+  </section>
+
+  <section class="mt-20 rounded-3xl border border-line bg-paper p-10">
+    <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-moss-700">·· em campo</p>
+    <h2 class="mt-3 font-serif text-4xl leading-tight">Resultados típicos no primeiro ano</h2>
+    <div id="kpis" class="mt-8 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3"></div>
+  </section>
+
+  <section class="mt-20 rounded-3xl bg-moss-900 p-12 text-bg">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 class="max-w-2xl font-serif text-5xl leading-tight">Quer ver <em class="text-mustard-300">esse módulo</em> rodando com seus dados?</h2>
+      <a href="index.html#cta" class="inline-flex items-center gap-2 rounded-full bg-mustard-300 px-6 py-3 text-[14px] text-moss-900 transition hover:bg-mustard-400">Agendar demo →</a>
+    </div>
+  </section>
+</main>
+
+<script>
+const modules = {
+  financeiro: {
+    title: 'Financeiro & Tesouraria.',
+    body: 'Conciliação bancária automática via Open Finance, DRE em tempo real e fluxo de caixa projetado por IA. O fechamento contábil sai do paliativo e vira processo previsível.',
+    feats: ['Contas a pagar e a receber','Conciliação Open Finance · 40+ bancos','DRE e BP em tempo real','Fluxo de caixa projetado 12 semanas (IA)','Centro de custo multi-dimensional','Aprovações por alçada','Boleto e PIX nativos'],
+    conn: ['Vendas → fatura para AR sem intervenção','Estoque → custo da mercadoria automático','Fiscal → escrita contábil em tempo real','BI → DRE consolidado por unidade'],
+    kpis: [['−68%','tempo de fechamento'],['100%','conciliação automática'],['12 sem.','horizonte de caixa projetado']]
+  },
+  estoque: {
+    title: 'Estoque & Logística.',
+    body: 'Multi-armazém, leitura por coletor, WMS embarcado e ressuprimento sugerido por algoritmo. Acabou o dinheiro parado em SKU errado.',
+    feats: ['Multi-armazém e multi-CD','WMS embarcado · separação por onda','Leitura por coletor (Android/iOS)','Ressuprimento por IA','Inventário cíclico assistido','Lote e validade · FEFO/FIFO','Etiqueta e código de barras nativos'],
+    conn: ['Vendas → reserva automática no pedido','Compras → sugestão direto para o pedido','Fiscal → entrada/saída fiscal sincronizada','BI → cobertura e giro por SKU'],
+    kpis: [['R$ 1,2M','desbloqueado em SKU parado'],['−42%','ruptura em SKU classe A'],['+28%','giro de estoque']]
+  },
+  vendas: {
+    title: 'Vendas & CRM.',
+    body: 'Pipeline visual, proposta, contrato digital, faturamento em um clique e comissão calculada sozinha. Do primeiro contato à NF emitida sem trocar de tela.',
+    feats: ['Pipeline kanban por equipe','Propostas com aprovação digital','Contratos com assinatura eletrônica','Faturamento em um clique','Comissão por regra (linear, escalonada)','Funil de leads + integrações de marketing','Quotas e metas por vendedor'],
+    conn: ['Estoque → reserva e disponibilidade','Financeiro → AR criado automaticamente','Fiscal → NF emitida na conversão','BI → forecast por estágio e vendedor'],
+    kpis: [['+19%','sell-out médio'],['12 dias','menos no DSO'],['1 clique','do pedido à NF']]
+  },
+  fiscal: {
+    title: 'Fiscal & Tributário.',
+    body: 'Emissão, recepção e arquivamento de NF-e, NFS-e, SPED e Reinf. Atualizações de layout entregues antes do prazo da Receita.',
+    feats: ['NF-e, NFC-e, NFS-e (todos os 5.570 municípios)','SPED Fiscal e Contribuições','Bloco K · controle de produção','Reinf · folha e prestadores','EFD-Reinf eSocial integrados','Manifesto MDFe e CTe','Auditoria contábil-fiscal mensal'],
+    conn: ['Vendas → NF emitida na ordem','Estoque → entrada/saída sincronizada','Financeiro → escrituração contábil','RH → integração eSocial e Reinf'],
+    kpis: [['100%','conformidade multi-UF'],['Antes do prazo','atualização de layout'],['3,2×','mais rápido lote NF-e']]
+  },
+  rh: {
+    title: 'RH & Folha.',
+    body: 'Admissão digital, ponto eletrônico integrado, eSocial e folha que conhece sua convenção coletiva — e a do seu sindicato regional.',
+    feats: ['Admissão 100% digital','Ponto eletrônico via app + biometria','eSocial em todos os eventos','Folha por CCT regional','Férias, 13º, rescisão calculados','Benefícios e VR/VA integrados','Avaliação de desempenho'],
+    conn: ['Financeiro → provisões e pagamentos','Fiscal → DCTFWeb e Reinf','BI → headcount, turnover, custo por colaborador','Vendas → comissão consolidada na folha'],
+    kpis: [['−40%','tempo de admissão'],['100%','conformidade eSocial'],['1 clique','envio de folha']]
+  },
+  bi: {
+    title: 'Inteligência & BI.',
+    body: 'Dashboards prontos por cargo, builder no-code de relatórios e alertas que chegam antes do problema — Slack, e-mail ou WhatsApp.',
+    feats: ['Dashboards prontos por cargo (CEO/CFO/COO)','Builder no-code de relatórios','Alertas inteligentes em tempo real','Detecção de anomalia automática','Drill-down até a transação','Compartilhamento por link público','Export para Excel/PDF/Slack'],
+    conn: ['Lê de todos os módulos com governança','Métricas atualizadas em tempo real','Permissões herdadas do RH','Pode disparar workflows em outros módulos'],
+    kpis: [['12 seg.','latência média do dado'],['200+','relatórios prontos'],['Anomalia','detectada antes do gestor']]
+  }
+};
+
+const m = new URLSearchParams(location.search).get('m') || 'financeiro';
+const d = modules[m] || modules.financeiro;
+document.title = `${d.title.replace('.', '')} · VentureERP`;
+document.getElementById('title').innerHTML = d.title.replace('.', '<span style="color:#CBAB1F">.</span>');
+document.getElementById('body').textContent = d.body;
+
+document.getElementById('feats').innerHTML = d.feats.map(f =>
+  `<li class="flex items-start gap-3 border-b border-line/60 pb-3">
+    <svg width="18" height="18" viewBox="0 0 28 28" fill="none" stroke="#5D7822" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-1 shrink-0"><path d="m5 14 5 5L23 7"/></svg>
+    <span>${f}</span>
+  </li>`
+).join('');
+
+document.getElementById('conn').innerHTML = d.conn.map(c =>
+  `<li class="flex items-start gap-3 border-b border-line/60 pb-3">
+    <span class="mt-2 h-1 w-3 shrink-0 bg-mustard-400"></span>
+    <span>${c}</span>
+  </li>`
+).join('');
+
+document.getElementById('kpis').innerHTML = d.kpis.map(([n, l]) =>
+  `<div class="bg-bg p-7">
+    <p class="font-serif text-[60px] leading-none tracking-tightest">${n}</p>
+    <p class="mt-3 text-[14px] text-muted">${l}</p>
+  </div>`
+).join('');
+</script>
+</body>
+</html>

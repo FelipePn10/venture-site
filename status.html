@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Status · VentureERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: { colors: {
+  bg:'#FAF8EC', paper:'#F4F1DF', ink:'#14201A', muted:'#5F6A5C', line:'#DCD6B8',
+  moss:{50:'#F0F2E0',500:'#5D7822',700:'#324512',800:'#22310F',900:'#17220C'},
+  mustard:{300:'#DCC03B',400:'#CBAB1F'}
+}, fontFamily:{ serif:['"Instrument Serif"','serif'], sans:['Geist','sans-serif'], mono:['"Geist Mono"','monospace']}}}};
+</script>
+<style>
+  body{font-family:Geist,sans-serif;background:#FAF8EC;color:#14201A}
+  .bar{display:grid;grid-template-columns:repeat(90,minmax(0,1fr));gap:2px}
+  .bar span{display:block;height:24px;border-radius:2px;background:#5D7822}
+  .bar span.warn{background:#CBAB1F}
+  .bar span.down{background:#B43E2A}
+</style>
+</head>
+<body>
+<header class="border-b border-line bg-paper">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg width="26" height="26" viewBox="0 0 30 30"><path d="M4 5 L15 24 L26 5" fill="none" stroke="#14201A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="6" r="2.6" fill="#CBAB1F"/></svg>
+      <span class="font-serif text-2xl">Venture<span style="color:#CBAB1F">ERP</span></span>
+    </a>
+    <a href="index.html" class="text-sm text-muted hover:text-ink">← Voltar para o site</a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-6 py-16">
+  <div class="flex items-center gap-3">
+    <span class="grid h-3 w-3 place-items-center rounded-full bg-moss-500"><span class="h-3 w-3 animate-ping rounded-full bg-moss-500 opacity-60"></span></span>
+    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">tudo operacional</span>
+  </div>
+  <h1 class="mt-4 font-serif text-6xl leading-[1] tracking-tight">Status do sistema</h1>
+  <p class="mt-4 max-w-2xl text-[17px] text-muted">Operação em tempo real dos serviços VentureERP. Histórico de 90 dias.<br/>Última verificação: <span class="font-mono text-ink" id="now">há 12 segundos</span></p>
+
+  <div class="mt-12 grid gap-3 rounded-2xl border border-line bg-paper p-6">
+    <div class="flex items-baseline justify-between border-b border-line pb-3">
+      <span class="font-serif text-2xl">Componentes</span>
+      <span class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">90 dias · uptime acumulado</span>
+    </div>
+    <div id="services"></div>
+  </div>
+
+  <div class="mt-10 rounded-2xl border border-line bg-paper p-6">
+    <p class="font-serif text-2xl">Incidentes recentes</p>
+    <ul class="mt-4 divide-y divide-line text-[14px]">
+      <li class="py-3 flex flex-wrap items-center gap-x-6 gap-y-1">
+        <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">28 abr · resolvido em 12min</span>
+        <span class="text-ink">Latência elevada na emissão de NF-e (SP)</span>
+        <span class="ml-auto rounded-full bg-mustard-300/40 px-2 py-0.5 font-mono text-[10px] text-moss-800">menor</span>
+      </li>
+      <li class="py-3 flex flex-wrap items-center gap-x-6 gap-y-1">
+        <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">11 abr · janela programada</span>
+        <span class="text-ink">Manutenção em readonly — banco principal</span>
+        <span class="ml-auto rounded-full bg-moss-50 px-2 py-0.5 font-mono text-[10px] text-moss-800">programado</span>
+      </li>
+      <li class="py-3 flex flex-wrap items-center gap-x-6 gap-y-1">
+        <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">02 mar · resolvido em 4min</span>
+        <span class="text-ink">Falha pontual no webhook de Open Finance (Itaú)</span>
+        <span class="ml-auto rounded-full bg-mustard-300/40 px-2 py-0.5 font-mono text-[10px] text-moss-800">menor</span>
+      </li>
+    </ul>
+  </div>
+</main>
+
+<script>
+const services = [
+  ['App Web · venture.app','99,98%'],
+  ['API Pública','99,99%'],
+  ['Emissão NF-e (todas SEFAZs)','99,94%'],
+  ['Open Finance · 40+ bancos','99,97%'],
+  ['Webhook & Integrações','99,99%'],
+  ['Cockpit BI','99,99%'],
+  ['Mobile · iOS + Android','100%']
+];
+const root = document.getElementById('services');
+services.forEach(([n, up]) => {
+  const row = document.createElement('div');
+  row.className = 'grid grid-cols-[1.4fr_3fr_auto] items-center gap-6 py-3 border-b border-line/60 last:border-0';
+  const bars = Array.from({length:90}).map((_, i) => {
+    const cls = (i === 27 && Math.random() > .9) ? 'warn' : (Math.random() > .995 ? 'warn' : '');
+    return `<span class="${cls}"></span>`;
+  }).join('');
+  row.innerHTML = `
+    <div class="flex items-center gap-2.5"><span class="h-2 w-2 rounded-full bg-moss-500"></span><span class="text-[14px] text-ink">${n}</span></div>
+    <div class="bar">${bars}</div>
+    <span class="font-mono text-[11px] text-moss-700">${up}</span>`;
+  root.appendChild(row);
+});
+</script>
+
+<footer class="border-t border-line bg-paper py-10">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 text-[12px] text-muted">
+    <span>© 2026 VentureERP Tecnologia S.A.</span>
+    <span class="flex gap-5"><a href="index.html">Site</a><a href="#">Privacidade</a><a href="#">Termos</a></span>
+  </div>
+</footer>
+</body>
+</html>
