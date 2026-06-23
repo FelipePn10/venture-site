@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { addLead, getLeads } from '@/lib/storage';
+import { addLead, type Lead } from '@/lib/storage';
 import nodemailer from 'nodemailer';
 
-async function sendNotification(lead: ReturnType<typeof addLead> extends Promise<infer T> ? T : ReturnType<typeof addLead>) {
+async function sendNotification(lead: Lead) {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, NOTIFICATION_EMAIL } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return;
 
@@ -39,20 +39,13 @@ export async function POST(req: NextRequest) {
     const { name, email, company, phone, size, source } = body;
     if (!name || !email) return NextResponse.json({ error: 'Nome e e-mail são obrigatórios' }, { status: 400 });
 
-    const lead = addLead({ name, email, company: company || '', phone: phone || '', size: size || '', source });
+    const lead = await addLead({ name, email, company: company || '', phone: phone || '', size: size || '', source });
 
-    sendNotification(lead).catch(() => {});
+    sendNotification(lead).catch((e) => console.error('[lead] Falha ao enviar e-mail de notificação:', e));
 
     return NextResponse.json({ success: true, id: lead.id });
-  } catch {
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+  } catch (e) {
+    console.error('[lead] Erro ao salvar lead:', e);
+    return NextResponse.json({ error: 'Não foi possível registrar seu contato. Tente novamente.' }, { status: 500 });
   }
-}
-
-export async function GET(req: NextRequest) {
-  const key = req.nextUrl.searchParams.get('key');
-  const adminKey = process.env.ADMIN_KEY || 'venture2025';
-  if (key !== adminKey) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-
-  return NextResponse.json(getLeads());
 }

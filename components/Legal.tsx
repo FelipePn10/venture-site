@@ -72,8 +72,7 @@ export function LegalShell({
           <p>
             Este documento foi elaborado em conformidade com a Lei nº 13.709/2018 (LGPD), o
             Marco Civil da Internet (Lei nº 12.965/2014) e o Código de Defesa do Consumidor
-            (Lei nº 8.078/1990). Recomenda-se revisão por profissional jurídico antes da
-            publicação definitiva. Em caso de dúvidas, fale com nosso Encarregado:{' '}
+            (Lei nº 8.078/1990). Em caso de dúvidas, fale com nosso Encarregado:{' '}
             <a href={`mailto:${legal.emailPrivacidade}`} className="text-moss-700 hover:underline">
               {legal.emailPrivacidade}
             </a>

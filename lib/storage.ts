@@ -1,22 +1,13 @@
-import fs from 'fs';
-import path from 'path';
+import { getSupabaseAdmin } from './supabase';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+type PgError = { message: string; details?: string | null; hint?: string | null; code?: string | null };
 
-function ensureDir() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-
-function readFile<T>(filename: string): T[] {
-  ensureDir();
-  const file = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(file)) return [];
-  try { return JSON.parse(fs.readFileSync(file, 'utf-8')); } catch { return []; }
-}
-
-function writeFile(filename: string, data: unknown[]) {
-  ensureDir();
-  fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2));
+function dbError(context: string, error: PgError): never {
+  const parts = [error.message];
+  if (error.details) parts.push(error.details);
+  if (error.hint) parts.push(`dica: ${error.hint}`);
+  if (error.code) parts.push(`código ${error.code}`);
+  throw new Error(`${context}: ${parts.filter(Boolean).join(' · ')}`);
 }
 
 export type Lead = {
@@ -54,42 +45,147 @@ export type Schedule = {
   notes?: string;
 };
 
-export function getLeads(): Lead[] {
-  return readFile<Lead>('leads.json');
+// --- Mapeamento snake_case (DB) -> camelCase (app) ---
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function mapLead(r: any): Lead {
+  return {
+    id: Number(r.id),
+    createdAt: r.created_at,
+    name: r.name,
+    email: r.email,
+    company: r.company ?? '',
+    phone: r.phone ?? '',
+    size: r.size ?? '',
+    source: r.source ?? undefined,
+  };
 }
 
-export function addLead(data: Omit<Lead, 'id' | 'createdAt'>): Lead {
-  const leads = getLeads();
-  const lead: Lead = { ...data, id: Date.now(), createdAt: new Date().toISOString() };
-  leads.push(lead);
-  writeFile('leads.json', leads);
-  return lead;
+function mapContact(r: any): Contact {
+  return {
+    id: Number(r.id),
+    createdAt: r.created_at,
+    name: r.name,
+    email: r.email,
+    subject: r.subject,
+    message: r.message,
+  };
 }
 
-export function getContacts(): Contact[] {
-  return readFile<Contact>('contacts.json');
+function mapSchedule(r: any): Schedule {
+  return {
+    id: Number(r.id),
+    createdAt: r.created_at,
+    name: r.name,
+    email: r.email,
+    company: r.company ?? '',
+    phone: r.phone ?? '',
+    segment: r.segment ?? '',
+    size: r.size ?? '',
+    current: r.current ?? '',
+    date: r.date,
+    time: r.time,
+    notes: r.notes ?? undefined,
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+// --- Leads ---
+export async function getLeads(): Promise<Lead[]> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('leads')
+    .select('*')
+    .order('created_at', { ascending: true });
+  if (error) dbError("Erro ao ler leads", error);
+  return (data ?? []).map(mapLead);
 }
 
-export function addContact(data: Omit<Contact, 'id' | 'createdAt'>): Contact {
-  const contacts = getContacts();
-  const contact: Contact = { ...data, id: Date.now(), createdAt: new Date().toISOString() };
-  contacts.push(contact);
-  writeFile('contacts.json', contacts);
-  return contact;
+export async function addLead(input: Omit<Lead, 'id' | 'createdAt'>): Promise<Lead> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('leads')
+    .insert({
+      name: input.name,
+      email: input.email,
+      company: input.company,
+      phone: input.phone,
+      size: input.size,
+      source: input.source ?? null,
+    })
+    .select()
+    .single();
+  if (error) dbError("Erro ao salvar lead", error);
+  return mapLead(data);
 }
 
-export function getSchedules(): Schedule[] {
-  return readFile<Schedule>('schedules.json');
+// --- Contatos ---
+export async function getContacts(): Promise<Contact[]> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('contacts')
+    .select('*')
+    .order('created_at', { ascending: true });
+  if (error) dbError("Erro ao ler contatos", error);
+  return (data ?? []).map(mapContact);
 }
 
-export function addSchedule(data: Omit<Schedule, 'id' | 'createdAt'>): Schedule {
-  const schedules = getSchedules();
-  const schedule: Schedule = { ...data, id: Date.now(), createdAt: new Date().toISOString() };
-  schedules.push(schedule);
-  writeFile('schedules.json', schedules);
-  return schedule;
+export async function addContact(input: Omit<Contact, 'id' | 'createdAt'>): Promise<Contact> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('contacts')
+    .insert({
+      name: input.name,
+      email: input.email,
+      subject: input.subject,
+      message: input.message,
+    })
+    .select()
+    .single();
+  if (error) dbError("Erro ao salvar contato", error);
+  return mapContact(data);
 }
 
-export function isSlotTaken(date: string, time: string): boolean {
-  return getSchedules().some((s) => s.date === date && s.time === time);
+// --- Agendamentos ---
+export async function getSchedules(): Promise<Schedule[]> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('schedules')
+    .select('*')
+    .order('created_at', { ascending: true });
+  if (error) dbError("Erro ao ler agendamentos", error);
+  return (data ?? []).map(mapSchedule);
+}
+
+export async function addSchedule(input: Omit<Schedule, 'id' | 'createdAt'>): Promise<Schedule> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('schedules')
+    .insert({
+      name: input.name,
+      email: input.email,
+      company: input.company,
+      phone: input.phone,
+      segment: input.segment,
+      size: input.size,
+      current: input.current,
+      date: input.date,
+      time: input.time,
+      notes: input.notes ?? null,
+    })
+    .select()
+    .single();
+  if (error) dbError("Erro ao salvar agendamento", error);
+  return mapSchedule(data);
+}
+
+export async function isSlotTaken(date: string, time: string): Promise<boolean> {
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb
+    .from('schedules')
+    .select('id')
+    .eq('date', date)
+    .eq('time', time)
+    .limit(1);
+  if (error) dbError("Erro ao verificar horário", error);
+  return (data?.length ?? 0) > 0;
 }

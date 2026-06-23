@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { addContact, getContacts } from '@/lib/storage';
+import { addContact, type Contact } from '@/lib/storage';
 import nodemailer from 'nodemailer';
 
-async function sendContactNotification(contact: ReturnType<typeof addContact>) {
+async function sendContactNotification(contact: Contact) {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, NOTIFICATION_EMAIL } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return;
 
@@ -36,20 +36,13 @@ export async function POST(req: NextRequest) {
     const { name, email, subject, message } = body;
     if (!name || !email || !message) return NextResponse.json({ error: 'Campos obrigatórios incompletos' }, { status: 400 });
 
-    const contact = addContact({ name, email, subject: subject || 'Contato geral', message });
+    const contact = await addContact({ name, email, subject: subject || 'Contato geral', message });
 
-    sendContactNotification(contact).catch(() => {});
+    sendContactNotification(contact).catch((e) => console.error('[contact] Falha ao enviar e-mail de notificação:', e));
 
     return NextResponse.json({ success: true, id: contact.id });
-  } catch {
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+  } catch (e) {
+    console.error('[contact] Erro ao salvar mensagem:', e);
+    return NextResponse.json({ error: 'Não foi possível enviar sua mensagem. Tente novamente.' }, { status: 500 });
   }
-}
-
-export async function GET(req: NextRequest) {
-  const key = req.nextUrl.searchParams.get('key');
-  const adminKey = process.env.ADMIN_KEY || 'venture2025';
-  if (key !== adminKey) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-
-  return NextResponse.json(getContacts());
 }

@@ -68,10 +68,10 @@ export default function AgendarPage() {
 
               <div className="mt-9 rounded-2xl border border-bg/15 bg-moss-800/50 p-5">
                 <p className="font-serif text-[19px] leading-snug text-bg">
-                  “Na demo eles mostraram o plano de corte reduzindo a sobra de chapa na hora. Aí eu entendi que não era papo de vendedor.”
+                  “Na demo mostraram o sistema reorganizando nossas ordens de produção e cortando o desperdício de matéria-prima na hora. Ali eu entendi que não era papo de vendedor.”
                 </p>
                 <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-bg/55">
-                  Diretor industrial · Metalúrgica, 140 colaboradores
+                  Rulian · Diretor, Tecnofer — metalúrgica, 50 colaboradores
                 </p>
               </div>
             </div>

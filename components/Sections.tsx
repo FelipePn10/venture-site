@@ -11,7 +11,6 @@ import {
   IconBox,
   IconChartLine,
   IconQuote,
-  IconStar,
   IconGlobe,
   IconBolt,
   IconPhone,
@@ -34,41 +33,33 @@ import {
 } from "./Illustrations";
 import { Counter } from "./Extras";
 import { Scheduler } from "./Scheduler";
+import { legal } from "@/lib/legal";
 
 export const Trust = () => {
-  const logos = [
-    "Metalúrgica Aço Forte",
-    "Móveis Bertotti",
-    "Inox Sul",
-    "MadeiraNova",
-    "FerroMaster",
-    "Móveis Tarumã",
-    "Serralheria União",
-    "Estrutura MG",
-    "Móveis Lumini",
-    "TecnoCorte",
-    "Aço & Cia",
-    "Carpintaria Real",
+  const creds = [
+    "Bloco K & SPED nativos",
+    "Nesting de chapa e MDF",
+    "Custo real por OP",
+    "Ordem de produção no coletor",
+    "MRP de matéria-prima",
+    "Implantação assistida",
   ];
-  const row = [...logos, ...logos];
   return (
     <section className="border-y border-line bg-paper py-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-          Metalúrgicas e moveleiras que trocaram a planilha e o caderno de
-          produção pelo VentureERP
+          Tudo o que uma indústria precisa — em um sistema só
         </p>
-        <div className="mask-x mt-6 overflow-hidden">
-          <div className="flex w-max animate-marquee gap-12 px-3">
-            {row.map((n, i) => (
-              <span
-                key={i}
-                className="font-serif text-2xl tracking-tight text-ink/55 whitespace-nowrap"
-              >
-                {n}
-              </span>
-            ))}
-          </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          {creds.map((c) => (
+            <span
+              key={c}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-bg px-4 py-2 font-serif text-lg tracking-tight text-ink/70"
+            >
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-moss-500" />
+              {c}
+            </span>
+          ))}
         </div>
       </div>
     </section>
@@ -356,7 +347,7 @@ export const Compare = () => {
     ["Custo real por peça", "Em tempo real, por OP", "Estimado no fim do mês", "Rateio genérico"],
     ["Ordem de produção", "Apontada no chão de fábrica", "Quadro branco e papel", "Módulo caro à parte"],
     ["Bloco K e SPED", "Gerados automaticamente", "Risco de multa", "Depende de consultoria"],
-    ["Tempo até operar", "37 dias", "—", "8 a 18 meses"],
+    ["Tempo até operar", "30 dias", "—", "8 a 18 meses"],
     ["Feito para indústria", "Sim, nativo", "Não", "Adaptado de outro setor"],
   ];
   return (
@@ -639,28 +630,27 @@ export const DemoBand = () => (
 export const Stats = () => {
   const stats = [
     {
-      value: 31,
+      value: 19,
+      prefix: "−",
       suffix: "%",
-      l: "de redução na sobra de chapa e MDF",
-      s: "média após o plano de corte",
+      l: "de desperdício de matéria-prima",
+      s: "estimativa baseada na Tecnofer",
     },
     {
-      value: 2.6,
-      suffix: "×",
-      decimals: 1,
-      l: "mais rápido para fechar um orçamento",
-      s: "vs. cálculo manual em planilha",
-    },
-    {
-      value: 1.4,
-      prefix: "R$ ",
-      suffix: "M",
-      decimals: 1,
-      l: "economizados em desperdício de material",
-      s: "no primeiro ano de uso",
+      value: 22,
+      prefix: "+",
+      suffix: "%",
+      l: "de performance na fabricação",
+      s: "projeção a partir de cliente real",
     },
     {
       value: 37,
+      suffix: "%",
+      l: "dos processos manuais automatizados",
+      s: "estimativa baseada na Tecnofer",
+    },
+    {
+      value: 30,
       suffix: " dias",
       l: "da assinatura ao chão de fábrica operando",
       s: "implantação 100% assistida",
@@ -670,13 +660,18 @@ export const Stats = () => {
     <section className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
       <div className="reveal max-w-3xl">
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
-          ·· resultados
+          ·· projeção de resultados
         </span>
         <h2 className="mt-3 font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
-          Não prometemos esses números.{" "}
-          <span className="italic text-moss-700">A fábrica dos clientes</span>{" "}
-          prova.
+          O que sua fábrica{" "}
+          <span className="italic text-moss-700">para de perder</span> com o
+          VentureERP.
         </h2>
+        <p className="mt-5 text-[15px] leading-relaxed text-muted">
+          Estimativas baseadas nos resultados reais da Tecnofer. Os números
+          variam conforme o porte, o mix de produtos e os processos de cada
+          fábrica.
+        </p>
       </div>
 
       <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
@@ -687,7 +682,6 @@ export const Stats = () => {
                 value={st.value}
                 prefix={st.prefix || ""}
                 suffix={st.suffix || ""}
-                decimals={st.decimals || 0}
               />
             </p>
             <p className="mt-4 text-[15px] leading-snug text-ink">{st.l}</p>
@@ -730,7 +724,7 @@ export const Workflow = () => {
         <div className="reveal grid items-end gap-6 md:grid-cols-[1.1fr_1fr]">
           <h2 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
             Do contrato à primeira{" "}
-            <span className="italic text-moss-700">OP no preço</span>: 37 dias.
+            <span className="italic text-moss-700">OP no preço</span>: 30 dias.
           </h2>
           <p className="text-lg leading-relaxed text-muted">
             Implantação não é só software — é um time dentro da sua fábrica. Do
@@ -768,108 +762,62 @@ export const Workflow = () => {
   );
 };
 
-export const Press = () => (
-  <section className="border-y border-line bg-bg py-12">
-    <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-8 px-6 lg:px-10">
-      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-        visto em
-      </p>
-      <div className="flex flex-1 flex-wrap items-center justify-around gap-8">
-        {[
-          "Exame",
-          "Valor Econômico",
-          "Revista O Mobiliário",
-          "Portal Metálica",
-          "InfoMoney",
-          "Indústria Hoje",
-        ].map((p) => (
-          <span
-            key={p}
-            className="font-serif text-xl tracking-tight text-ink/55"
-          >
-            {p}
-          </span>
-        ))}
-      </div>
-      <div className="flex items-center gap-3 rounded-full border border-mustard-400 bg-mustard-50 px-4 py-1.5">
-        <IconStar size={14} className="text-mustard-500" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-moss-800">
-          ERP indústria · destaque 2025
-        </span>
-      </div>
-    </div>
-  </section>
-);
-
 export const Testimonials = () => {
-  const items = [
-    {
-      q: "Parei de orçar no chute. Hoje o preço sai com o custo real de chapa, dobra e solda — e a margem que era 8% virou 19%, vendendo o mesmo tanto.",
-      n: "Marcos Ferraz",
-      r: "Diretor · Metalúrgica Aço Forte",
-      m: "140 colaboradores",
-    },
-    {
-      q: "O plano de corte sozinho pagou o sistema. A sobra de MDF caiu de 11% para 4%. É chapa que antes virava lixo e agora vira móvel vendido.",
-      n: "Cláudia Bertotti",
-      r: "Sócia · Móveis Bertotti",
-      m: "3 lojas + fábrica própria",
-    },
-    {
-      q: "Antes eu não sabia em que máquina estava cada pedido. Agora abro o painel e vejo todas as OPs e o gargalo. O prazo de entrega deixou de ser aposta.",
-      n: "Rafael Nunes",
-      r: "Gerente de Produção · Inox Sul",
-      m: "2 plantas industriais",
-    },
+  const metrics: [string, string][] = [
+    ["−19%", "de desperdício de matéria-prima"],
+    ["+22%", "de performance na fabricação"],
+    ["37%", "dos processos automatizados"],
   ];
   return (
-    <section id="clientes" className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
-      <div className="reveal grid items-end gap-6 md:grid-cols-[1fr_auto]">
-        <h2 className="max-w-3xl font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
-          O que diz quem botou a fábrica{" "}
-          <span className="italic text-moss-700">no controle</span>.
+    <section id="cliente" className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
+      <div className="reveal max-w-3xl">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
+          ·· cliente
+        </span>
+        <h2 className="mt-3 font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
+          Uma metalúrgica de verdade.{" "}
+          <span className="italic text-moss-700">Resultados de verdade.</span>
         </h2>
-        <div className="flex items-center gap-2 text-mustard-400">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <IconStar key={i} size={20} />
-          ))}
-          <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-            4.9 · indústria
-          </span>
-        </div>
       </div>
 
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
-        {items.map((it, i) => (
-          <figure
-            key={it.n}
-            className="card-accent reveal flex h-full flex-col rounded-2xl border border-line bg-paper p-7"
-            data-delay={i + 1}
-          >
-            <IconQuote size={26} className="text-mustard-400" />
-            <blockquote className="mt-5 flex-1 font-serif text-[22px] leading-snug text-ink">
-              "{it.q}"
-            </blockquote>
-            <figcaption className="mt-7 flex items-center gap-3 border-t border-line pt-5">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-moss-700 font-serif text-bg">
-                {it.n
-                  .split(" ")
-                  .map((w) => w[0])
-                  .slice(0, 2)
-                  .join("")}
+      <div
+        className="reveal mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-[1.3fr_1fr]"
+        data-delay="1"
+      >
+        <figure className="bg-bg p-9 md:p-12">
+          <IconQuote size={30} className="text-mustard-400" />
+          <blockquote className="mt-6 font-serif text-[26px] leading-snug text-ink md:text-[30px]">
+            "Trocamos planilhas e sistemas legados pelo VentureERP e
+            reorganizamos as ordens de produção. O desperdício de matéria-prima
+            caiu, a fábrica passou a render mais e boa parte do trabalho manual
+            virou processo automático."
+          </blockquote>
+          <figcaption className="mt-8 flex items-center gap-3 border-t border-line pt-6">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-moss-700 font-serif text-bg">
+              R
+            </span>
+            <span className="text-sm">
+              <span className="block text-ink">Rulian · Diretor</span>
+              <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                Tecnofer · Indústria metalúrgica · 50 colaboradores
               </span>
-              <span className="text-sm">
-                <span className="block text-ink">{it.n}</span>
-                <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                  {it.r}
-                </span>
-              </span>
-              <span className="ml-auto font-mono text-[10px] text-muted">
-                {it.m}
-              </span>
-            </figcaption>
-          </figure>
-        ))}
+            </span>
+          </figcaption>
+        </figure>
+
+        <div className="grid bg-bg">
+          {metrics.map(([n, l], i) => (
+            <div
+              key={l}
+              className={`flex flex-col justify-center p-8 ${
+                i < metrics.length - 1 ? "border-b border-line" : ""
+              }`}
+            >
+              <p className="font-serif text-5xl tracking-tight text-ink">{n}</p>
+              <p className="mt-2 text-[14px] leading-snug text-muted">{l}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1158,7 +1106,7 @@ const footerCols: [string, [string, string][]][] = [
     "Empresa",
     [
       ["A plataforma", "/#plataforma"],
-      ["Para o seu setor", "/#clientes"],
+      ["Para o seu setor", "/#setores"],
       ["Planos", "/#planos"],
       ["Cases", "/cases"],
       ["Implantação", "/#workflow"],
@@ -1305,8 +1253,7 @@ export const Footer = () => (
 
       <div className="mt-12 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8 text-[12px] text-muted">
         <span>
-          © 2026 VentureERP Tecnologia S.A. · CNPJ 00.000.000/0001-00 · São
-          Paulo, BR
+          © 2026 {legal.nomeFantasia} · CNPJ {legal.cnpj} · Maringá/PR, BR
         </span>
         <span className="flex gap-5">
           <Link href="/privacidade" className="hover:text-moss-700">Privacidade</Link>

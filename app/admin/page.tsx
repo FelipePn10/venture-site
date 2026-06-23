@@ -1,5 +1,9 @@
-import { getLeads, getContacts, getSchedules } from '@/lib/storage';
+import { getLeads, getContacts, getSchedules, type Lead, type Contact, type Schedule } from '@/lib/storage';
+import { isAdminAuthed, adminConfigured } from '@/lib/auth';
+import { AdminLogin, AdminLogout } from '@/components/AdminLogin';
 import Link from 'next/link';
+
+export const dynamic = 'force-dynamic';
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
@@ -10,47 +14,32 @@ function fmtDay(ymd: string) {
   return new Date(y, m - 1, d).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
 }
 
-export default function AdminPage({ searchParams }: { searchParams: { key?: string } }) {
-  const adminKey = process.env.ADMIN_KEY || 'venture2025';
-  const authorized = searchParams.key === adminKey;
-
-  if (!authorized) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6">
-        <div className="w-full max-w-sm rounded-2xl border border-line bg-paper p-8">
-          <h1 className="font-serif text-3xl text-ink">Painel Admin</h1>
-          <p className="mt-2 text-sm text-muted">Acesse com a chave de administrador.</p>
-          <form className="mt-6" action="" method="get">
-            <label className="block">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Chave de acesso</span>
-              <input
-                name="key"
-                type="password"
-                placeholder="Digite a chave"
-                className="mt-1.5 w-full rounded-lg border border-line bg-bg px-3 py-2.5 text-sm text-ink focus:border-moss-700 focus:outline-none"
-              />
-            </label>
-            <button
-              type="submit"
-              className="mt-4 w-full rounded-full bg-moss-800 py-2.5 text-sm text-bg transition hover:bg-moss-900"
-            >
-              Entrar
-            </button>
-          </form>
-          <p className="mt-4 text-center text-[11px] text-muted">
-            Acesso restrito. Defina uma chave forte na variável de ambiente{' '}
-            <code className="font-mono">ADMIN_KEY</code>.
-          </p>
-        </div>
-      </div>
-    );
+export default async function AdminPage() {
+  if (!isAdminAuthed()) {
+    return <AdminLogin configured={adminConfigured()} />;
   }
 
-  const leads = getLeads().reverse();
-  const contacts = getContacts().reverse();
-  const schedules = getSchedules()
-    .slice()
-    .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  const [leadsR, contactsR, schedulesR] = await Promise.allSettled([
+    getLeads(),
+    getContacts(),
+    getSchedules(),
+  ]);
+
+  const errMsg = (r: PromiseRejectedResult) =>
+    r.reason instanceof Error ? r.reason.message : 'Falha ao carregar.';
+
+  const leads: Lead[] = leadsR.status === 'fulfilled' ? leadsR.value.reverse() : [];
+  const contacts: Contact[] = contactsR.status === 'fulfilled' ? contactsR.value.reverse() : [];
+  const schedules: Schedule[] =
+    schedulesR.status === 'fulfilled'
+      ? schedulesR.value.slice().sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
+      : [];
+
+  const loadErrors = [
+    leadsR.status === 'rejected' ? `Leads — ${errMsg(leadsR)}` : null,
+    contactsR.status === 'rejected' ? `Mensagens — ${errMsg(contactsR)}` : null,
+    schedulesR.status === 'rejected' ? `Agendamentos — ${errMsg(schedulesR)}` : null,
+  ].filter(Boolean) as string[];
 
   return (
     <div className="min-h-screen bg-bg px-6 py-12">
@@ -62,7 +51,7 @@ export default function AdminPage({ searchParams }: { searchParams: { key?: stri
             </Link>
             <h1 className="mt-2 font-serif text-4xl text-ink">Painel de Leads</h1>
           </div>
-          <div className="flex gap-3 text-sm text-muted">
+          <div className="flex items-center gap-3 text-sm text-muted">
             <span className="rounded-full border border-line bg-paper px-4 py-1.5">
               <strong className="text-ink">{schedules.length}</strong> demos agendadas
             </span>
@@ -72,8 +61,25 @@ export default function AdminPage({ searchParams }: { searchParams: { key?: stri
             <span className="rounded-full border border-line bg-paper px-4 py-1.5">
               <strong className="text-ink">{contacts.length}</strong> mensagens
             </span>
+            <AdminLogout />
           </div>
         </div>
+
+        {loadErrors.length > 0 && (
+          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-[13px] text-red-700">
+            <strong>Falha ao carregar parte dos dados.</strong>
+            <ul className="mt-2 list-disc pl-5">
+              {loadErrors.map((m) => (
+                <li key={m}>{m}</li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[12px]">
+              Em geral é transitório (cache de schema da Supabase logo após criar tabelas) — recarregue em alguns segundos.
+              Persistindo, verifique <code className="font-mono">SUPABASE_URL</code> e{' '}
+              <code className="font-mono">SUPABASE_SECRET_KEY</code>.
+            </p>
+          </div>
+        )}
 
         {/* Demonstrações agendadas */}
         <div className="mt-10">
@@ -190,12 +196,6 @@ export default function AdminPage({ searchParams }: { searchParams: { key?: stri
               ))}
             </div>
           )}
-        </div>
-
-        <div className="mt-16 rounded-xl border border-line bg-paper p-5 text-[12px] text-muted">
-          <strong className="text-ink">Como configurar notificações por e-mail:</strong> Crie um arquivo <code className="font-mono">.env.local</code> com{' '}
-          <code className="font-mono">SMTP_HOST</code>, <code className="font-mono">SMTP_USER</code>, <code className="font-mono">SMTP_PASS</code> e{' '}
-          <code className="font-mono">NOTIFICATION_EMAIL</code>. Veja <code className="font-mono">.env.local.example</code> para referência.
         </div>
       </div>
     </div>

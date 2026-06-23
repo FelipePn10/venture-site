@@ -82,11 +82,11 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !date || !time) {
       return NextResponse.json({ error: 'Nome, e-mail, data e horário são obrigatórios' }, { status: 400 });
     }
-    if (isSlotTaken(date, time)) {
+    if (await isSlotTaken(date, time)) {
       return NextResponse.json({ error: 'Esse horário acabou de ser reservado. Escolha outro.' }, { status: 409 });
     }
 
-    const schedule = addSchedule({
+    const schedule = await addSchedule({
       name,
       email,
       company: company || '',
@@ -99,27 +99,25 @@ export async function POST(req: NextRequest) {
       notes: notes || '',
     });
 
-    notify(schedule).catch(() => {});
+    notify(schedule).catch((e) => console.error('[schedule] Falha ao enviar e-mails:', e));
 
     return NextResponse.json({ success: true, id: schedule.id });
-  } catch {
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+  } catch (e) {
+    console.error('[schedule] Erro ao salvar agendamento:', e);
+    return NextResponse.json({ error: 'Não foi possível agendar. Tente novamente.' }, { status: 500 });
   }
 }
 
 export async function GET(req: NextRequest) {
   // Lista horários já reservados (para desabilitar no front). Apenas date+time, sem dados pessoais.
   const date = req.nextUrl.searchParams.get('date');
-  const key = req.nextUrl.searchParams.get('key');
-
-  if (key) {
-    const adminKey = process.env.ADMIN_KEY || 'venture2025';
-    if (key !== adminKey) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-    return NextResponse.json(getSchedules());
+  try {
+    const taken = (await getSchedules())
+      .filter((s) => !date || s.date === date)
+      .map((s) => ({ date: s.date, time: s.time }));
+    return NextResponse.json(taken);
+  } catch (e) {
+    console.error('[schedule] Erro ao listar horários:', e);
+    return NextResponse.json([], { status: 200 });
   }
-
-  const taken = getSchedules()
-    .filter((s) => !date || s.date === date)
-    .map((s) => ({ date: s.date, time: s.time }));
-  return NextResponse.json(taken);
 }

@@ -9,7 +9,7 @@ const links: [string, string][] = [
   ['Plataforma', '/#plataforma'],
   ['Módulos', '/#modulos'],
   ['Implantação', '/#workflow'],
-  ['Clientes', '/#clientes'],
+  ['Setores', '/#setores'],
   ['Planos', '/#planos'],
   ['Demo', '/demo'],
 ];

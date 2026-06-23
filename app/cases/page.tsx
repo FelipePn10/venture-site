@@ -1,88 +1,122 @@
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 
-type Case = {
-  badge: string;
-  title: string;
-  italic: string;
-  body: string;
-  quote: string;
-  author: string;
-  kpis: [string, string][];
-  flip?: boolean;
-};
+export const metadata = { title: 'Case Tecnofer · VentureERP' };
 
-const cases: Case[] = [
-  {
-    badge: 'metalúrgica · 140 colaboradores',
-    title: 'Metalúrgica Aço Forte: ',
-    italic: 'orçar no custo certo.',
-    body: 'Fabricante de estruturas metálicas que orçava no Excel, no feeling do encarregado. Peça complexa demorava horas para precificar — e nem sempre cobria o custo real de corte, dobra e solda. Em 35 dias, a ficha técnica passou a calcular o preço sozinha. A margem que era 8% subiu para 19%, vendendo o mesmo volume.',
-    quote: 'Parei de orçar no chute. O preço sai com o custo real de chapa, dobra e solda — e a margem dobrou.',
-    author: 'Marcos Ferraz · Diretor, Metalúrgica Aço Forte',
-    kpis: [['8% → 19%', 'margem média por peça'], ['2,8×', 'mais rápido para orçar'], ['100%', 'Bloco K e SPED em dia']]
-  },
-  {
-    badge: 'moveleira · fábrica + 3 lojas',
-    title: 'Móveis Bertotti: ',
-    italic: 'a sobra de MDF que virou móvel.',
-    body: 'Marcenaria de móveis planejados que perdia chapa de MDF em cada projeto cortado no olho. A sobra batia 11% — caminhão de retalho indo para a caçamba todo mês. Com o plano de corte automático, o aproveitamento disparou e a sobra caiu para 4%. O módulo se pagou no primeiro trimestre.',
-    quote: 'O plano de corte sozinho pagou o sistema. É chapa que antes virava lixo e agora vira móvel vendido.',
-    author: 'Cláudia Bertotti · Sócia, Móveis Bertotti',
-    kpis: [['11% → 4%', 'sobra de MDF'], ['+22%', 'margem por projeto'], ['1 trimestre', 'para o módulo se pagar']],
-    flip: true
-  },
-  {
-    badge: 'metalúrgica · 2 plantas',
-    title: 'Inox Sul: ',
-    italic: 'o prazo que deixou de ser aposta.',
-    body: 'Duas plantas, dezenas de ordens de produção simultâneas e nenhuma visibilidade de chão de fábrica. Quando o cliente ligava, ninguém sabia em que máquina estava o pedido. Com apontamento por coletor e painel de OEE, cada OP passou a ter status em tempo real — e o gargalo aparece antes de estourar o prazo.',
-    quote: 'Agora abro o painel e vejo todas as OPs e o gargalo na hora. O prazo de entrega deixou de ser aposta.',
-    author: 'Rafael Nunes · Gerente de Produção, Inox Sul',
-    kpis: [['Tempo real', 'status de cada OP'], ['−27%', 'atraso de entrega'], ['OEE', 'visível por máquina e turno']]
-  }
+const metrics: { n: string; l: string }[] = [
+  { n: '−19%', l: 'de desperdício de matéria-prima' },
+  { n: '+22%', l: 'de performance na fabricação' },
+  { n: '37%', l: 'dos processos manuais automatizados' },
 ];
 
-export const metadata = { title: 'Cases · VentureERP' };
+const before: [string, string][] = [
+  ['Antes', 'Planilhas soltas e sistemas legados que não conversavam entre si.'],
+  ['Antes', 'Ordens de produção dependiam de retrabalho manual a cada etapa.'],
+  ['Antes', 'Matéria-prima se perdia sem ninguém medir quanta chapa virava sobra.'],
+];
+
+const after: [string, string][] = [
+  ['Depois', 'Orçamento ligado ao chão de fábrica em um sistema só.'],
+  ['Depois', 'Ordens de produção reorganizadas e acompanhadas em tempo real.'],
+  ['Depois', 'Consumo de material medido — desperdício caiu e a margem subiu.'],
+];
 
 export default function CasesPage() {
   return (
     <>
-      <header className="border-b border-line bg-bg/80 backdrop-blur sticky top-0 z-30">
+      <header className="sticky top-0 z-30 border-b border-line bg-bg/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Logo />
           <Link href="/" className="text-sm text-muted hover:text-ink">← Voltar</Link>
         </div>
       </header>
 
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">·· cases</span>
+      {/* Intro */}
+      <section className="mx-auto max-w-7xl px-6 pb-10 pt-24">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">·· case</span>
         <h1 className="mt-3 max-w-3xl font-serif text-7xl leading-[1] tracking-tightest">
-          Histórias reais. <em className="text-moss-700">Mudanças mensuráveis.</em>
+          Uma metalúrgica de verdade. <em className="text-moss-700">Resultados de verdade.</em>
         </h1>
         <p className="mt-6 max-w-xl text-[17px] text-muted">
-          Empresas que trocaram o ERP — e o jeito de operar — com a VentureERP. Métricas auditadas pelo cliente.
+          Como a Tecnofer trocou a planilha e os sistemas legados pelo VentureERP — e o que mudou no chão de fábrica.
+          Números informados pelo próprio cliente.
         </p>
       </section>
 
-      <section className="mx-auto max-w-7xl space-y-10 px-6 pb-24">
-        {cases.map((c, i) => (
-          <article key={i} className={`grid gap-10 rounded-3xl border border-line p-10 ${c.flip ? 'md:grid-cols-[1fr_1.2fr]' : 'md:grid-cols-[1.2fr_1fr]'} ${i % 2 === 0 ? 'bg-paper' : 'bg-bg'}`}>
-            {c.flip && <KpiCard kpis={c.kpis} />}
-            <div>
-              <span className="rounded-full bg-moss-700 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-bg">{c.badge}</span>
-              <h2 className="mt-5 font-serif text-5xl leading-[1.05] tracking-tight">
-                {c.title}<em className="text-moss-700">{c.italic}</em>
-              </h2>
-              <p className="mt-5 text-[16px] text-muted">{c.body}</p>
-              <blockquote className="mt-6 border-l-2 border-mustard-400 pl-5 font-serif text-2xl leading-snug italic text-ink">
-                "{c.quote}"
-              </blockquote>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{c.author}</p>
+      {/* Case em destaque */}
+      <section className="mx-auto max-w-7xl px-6 pb-24">
+        <article className="overflow-hidden rounded-3xl border border-line bg-paper">
+          {/* Cabeçalho do case */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line px-8 py-7 md:px-12">
+            <div className="flex items-center gap-4">
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-moss-700 font-serif text-2xl text-bg">
+                TF
+              </span>
+              <div>
+                <p className="font-serif text-3xl leading-none text-ink">Tecnofer</p>
+                <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                  Indústria metalúrgica · 50 colaboradores
+                </p>
+              </div>
             </div>
-            {!c.flip && <KpiCard kpis={c.kpis} />}
-          </article>
-        ))}
+            <span className="rounded-full bg-mustard-300 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-moss-900">
+              cliente VentureERP
+            </span>
+          </div>
+
+          {/* Métricas */}
+          <div className="grid gap-px border-b border-line bg-line md:grid-cols-3">
+            {metrics.map((m) => (
+              <div key={m.l} className="bg-bg p-8 text-center md:text-left">
+                <p className="font-serif text-6xl leading-none tracking-tightest text-ink">{m.n}</p>
+                <p className="mt-3 text-[14px] leading-snug text-muted">{m.l}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Narrativa + citação */}
+          <div className="grid gap-10 px-8 py-10 md:grid-cols-[1.2fr_1fr] md:px-12 md:py-12">
+            <div>
+              <h2 className="font-serif text-3xl leading-tight text-ink">
+                Da planilha ao chão de fábrica no controle.
+              </h2>
+              <p className="mt-5 text-[16px] leading-relaxed text-muted">
+                A Tecnofer tocava a produção entre planilhas soltas e sistemas legados que não conversavam entre si.
+                Cada ordem de produção dependia de retrabalho manual, e a matéria-prima se perdia no caminho — sem
+                ninguém enxergar quanta chapa virava sobra.
+              </p>
+              <p className="mt-4 text-[16px] leading-relaxed text-muted">
+                Com o VentureERP, a fábrica reorganizou as ordens de produção, ligou o orçamento ao chão de fábrica e
+                automatizou as rotinas que viviam em planilha. O desperdício de matéria-prima caiu 19%, a performance de
+                fabricação subiu 22% e mais de um terço dos processos manuais virou automático.
+              </p>
+
+              <blockquote className="mt-7 border-l-2 border-mustard-400 pl-5 font-serif text-2xl leading-snug italic text-ink">
+                "Saímos das planilhas e dos sistemas legados e botamos a fábrica no controle. A produção ficou
+                organizada, a matéria-prima rende mais e o que era trabalho manual virou processo automático."
+              </blockquote>
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                Rulian · Diretor, Tecnofer
+              </p>
+            </div>
+
+            {/* Antes / Depois */}
+            <div className="space-y-3">
+              {before.map(([, txt], i) => (
+                <div key={i} className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-line bg-bg p-4">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Antes</p>
+                    <p className="mt-1.5 text-[13px] leading-snug text-ink/70">{txt}</p>
+                  </div>
+                  <div className="rounded-xl border border-moss-200 bg-moss-50 p-4">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-moss-700">Depois</p>
+                    <p className="mt-1.5 text-[13px] leading-snug text-ink">{after[i][1]}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
       </section>
 
       <section className="bg-moss-900 py-20 text-bg">
@@ -94,21 +128,5 @@ export default function CasesPage() {
         </div>
       </section>
     </>
-  );
-}
-
-function KpiCard({ kpis }: { kpis: [string, string][] }) {
-  return (
-    <div className="rounded-2xl border border-line bg-bg p-7">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">resultados · 12 meses</p>
-      <div className="mt-5 space-y-6">
-        {kpis.map(([n, l]) => (
-          <div key={l} className="border-b border-line pb-5 last:border-0 last:pb-0">
-            <p className="font-serif text-6xl leading-none tracking-tightest">{n}</p>
-            <p className="mt-2 text-[14px] text-muted">{l}</p>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

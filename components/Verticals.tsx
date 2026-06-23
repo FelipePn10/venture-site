@@ -38,7 +38,7 @@ export const Verticals = () => {
   const [active, setActive] = useState('metalurgica');
   const v = verticals.find((x) => x.id === active)!;
   return (
-    <section className="bg-paper py-28">
+    <section id="setores" className="bg-paper py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="reveal grid items-end gap-8 md:grid-cols-2">
           <div>

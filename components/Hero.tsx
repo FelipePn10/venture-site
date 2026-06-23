@@ -58,9 +58,17 @@ export const Hero = () => (
           </Link>
         </div>
 
+        <p className="mt-4 text-[13px] text-muted">
+          Planos a partir de{" "}
+          <Link href="/#planos" className="text-moss-700 underline-offset-2 hover:underline">
+            R$ 1.267/mês
+          </Link>{" "}
+          · sem licença por usuário · implantação assistida em 30 dias.
+        </p>
+
         <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-6">
           {[
-            ["37 dias", "do contrato ao chão de fábrica"],
+            ["30 dias", "do contrato ao chão de fábrica"],
             ["−31%", "de sobra de chapa e MDF"],
             ["100%", "Bloco K e SPED em dia"],
           ].map(([n, l]) => (
