@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck, IconFlame, IconTree, IconCalendar } from './Icons';
+import { maskPhoneBR } from '@/lib/phone';
 
 /**
  * Diagnóstico de maturidade da operação.
@@ -400,8 +401,11 @@ export const Diagnostico = () => {
               </span>
               <input
                 type="tel"
+                inputMode="numeric"
+                autoComplete="tel"
+                maxLength={16}
                 value={form.phone}
-                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                onChange={(e) => setForm((f) => ({ ...f, phone: maskPhoneBR(e.target.value) }))}
                 placeholder="(11) 99999-9999"
                 className="mt-1.5 w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-moss-700 focus:outline-none"
               />

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck } from './Icons';
+import { maskPhoneBR, phoneDigits } from '@/lib/phone';
 
 /**
  * Formulário de marketing do VentureERP.
@@ -117,6 +118,12 @@ export const LeadForm = ({
       setState('error');
       return;
     }
+    // WhatsApp é opcional, mas se preenchido precisa estar completo (10 ou 11 dígitos).
+    if (form.phone && phoneDigits(form.phone) < 10) {
+      setErrorMsg('O WhatsApp parece incompleto. Confira o DDD e o número.');
+      setState('error');
+      return;
+    }
     setState('loading');
     setErrorMsg('');
 
@@ -215,8 +222,11 @@ export const LeadForm = ({
           <span className={label}>WhatsApp</span>
           <input
             type="tel"
+            inputMode="numeric"
+            autoComplete="tel"
+            maxLength={16}
             value={form.phone}
-            onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, phone: maskPhoneBR(e.target.value) }))}
             placeholder="(11) 99999-9999"
             className={field}
           />
