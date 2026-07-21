@@ -3,6 +3,7 @@ import { Instrument_Serif } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@/components/Analytics";
+import { HubSpotTracking } from "@/components/HubSpot";
 import "./globals.css";
 
 const serif = Instrument_Serif({
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="font-sans">
         {children}
         <Analytics />
+        <HubSpotTracking />
       </body>
     </html>
   );

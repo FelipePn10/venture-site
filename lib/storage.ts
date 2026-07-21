@@ -19,6 +19,17 @@ export type Lead = {
   phone: string;
   size: string;
   source?: string;
+  // Qualificação vinda do formulário de marketing (LeadForm).
+  role: string;
+  segment: string;
+  system: string;
+  timeline: string;
+  challenges: string[];
+  message: string;
+  utm: Record<string, string>;
+  /** Consentimento LGPD: aceite explícito e o momento em que ocorreu. */
+  consent: boolean;
+  consentAt: string | null;
 };
 
 export type Contact = {
@@ -57,6 +68,15 @@ function mapLead(r: any): Lead {
     phone: r.phone ?? '',
     size: r.size ?? '',
     source: r.source ?? undefined,
+    role: r.role ?? '',
+    segment: r.segment ?? '',
+    system: r.system ?? '',
+    timeline: r.timeline ?? '',
+    challenges: r.challenges ?? [],
+    message: r.message ?? '',
+    utm: r.utm ?? {},
+    consent: r.consent ?? false,
+    consentAt: r.consent_at ?? null,
   };
 }
 
@@ -100,7 +120,21 @@ export async function getLeads(): Promise<Lead[]> {
   return (data ?? []).map(mapLead);
 }
 
-export async function addLead(input: Omit<Lead, 'id' | 'createdAt'>): Promise<Lead> {
+/** Campos de qualificação são opcionais: nem toda origem de lead os coleta. */
+type QualificationFields =
+  | 'role'
+  | 'segment'
+  | 'system'
+  | 'timeline'
+  | 'challenges'
+  | 'message'
+  | 'utm'
+  | 'consent'
+  | 'consentAt';
+export type LeadInput = Omit<Lead, 'id' | 'createdAt' | QualificationFields> &
+  Partial<Pick<Lead, QualificationFields>>;
+
+export async function addLead(input: LeadInput): Promise<Lead> {
   const sb = getSupabaseAdmin();
   const { data, error } = await sb
     .from('leads')
@@ -111,6 +145,15 @@ export async function addLead(input: Omit<Lead, 'id' | 'createdAt'>): Promise<Le
       phone: input.phone,
       size: input.size,
       source: input.source ?? null,
+      role: input.role ?? '',
+      segment: input.segment ?? '',
+      system: input.system ?? '',
+      timeline: input.timeline ?? '',
+      challenges: input.challenges ?? [],
+      message: input.message ?? '',
+      utm: input.utm ?? {},
+      consent: input.consent ?? false,
+      consent_at: input.consent ? new Date().toISOString() : null,
     })
     .select()
     .single();

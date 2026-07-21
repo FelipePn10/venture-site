@@ -1,13 +1,18 @@
 import { Nav } from '@/components/Nav';
 import { Hero } from '@/components/Hero';
 import {
-  Trust, Problem, Pillars, Modules, Band, DemoBand, Compare, Testimonials, Stats, Workflow, Compliance, CTA, ContactSection, Footer
+  Trust, SectorPicker, Problem, Modules, Testimonials, Workflow, Compliance, CTA, ContactSection, Footer
 } from '@/components/Sections';
 import { Verticals } from '@/components/Verticals';
-import { Pricing } from '@/components/Pricing';
 import { FAQ } from '@/components/FAQ';
 import { FloatingCTA, CookieBanner, RevealRoot } from '@/components/Extras';
 
+/**
+ * Home enxuta: o essencial para o visitante entender o problema, ver que o
+ * sistema é do setor dele e converter. O aprofundamento por setor vive em
+ * /metalurgicas e /moveleiras; preço não fica no site (proposta sai depois da
+ * primeira reunião).
+ */
 export default function Home() {
   return (
     <RevealRoot>
@@ -15,16 +20,11 @@ export default function Home() {
         <Nav />
         <Hero />
         <Trust />
+        <SectorPicker />
         <Problem />
-        <Pillars />
         <Modules />
-        <Band />
         <Verticals />
-        <DemoBand />
-        <Compare />
         <Testimonials />
-        <Pricing />
-        <Stats />
         <Workflow />
         <Compliance />
         <FAQ />

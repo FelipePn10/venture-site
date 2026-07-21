@@ -1,35 +1,64 @@
 'use client';
 
 import { useState } from 'react';
-import { IconCheck, IconFlame, IconTree } from './Icons';
+import Link from 'next/link';
+import { IconArrow, IconCheck, IconFlame, IconTree } from './Icons';
 
 type Vertical = {
   id: string;
   label: string;
+  href: string;
   Icon: typeof IconFlame;
   title: string;
   body: string;
-  stats: [string, string][];
   feats: string[];
+  /**
+   * Painel lateral. Só usamos números quando existe um cliente real por trás
+   * deles — hoje isso vale para a metalúrgica (Tecnofer). Na moveleira o painel
+   * descreve o que o sistema faz, sem inventar métrica.
+   */
+  proof:
+    | { kind: 'case'; client: string; context: string; stats: [string, string][] }
+    | { kind: 'capabilities'; title: string; items: string[] };
 };
 
 const verticals: Vertical[] = [
   {
     id: 'metalurgica',
     label: 'Metalúrgica',
+    href: '/metalurgicas',
     Icon: IconFlame,
     title: 'Da chapa cortada à estrutura entregue.',
     body: 'Orçamento com custo real de corte, dobra, solda, usinagem e pintura. Plano de corte de chapa que reduz a sobra, ordem de produção apontada por posto e Bloco K gerado sozinho. Tudo amarrado à ficha técnica da peça.',
-    stats: [['−34%', 'sobra de chapa de aço'], ['2,8×', 'mais rápido para orçar'], ['100%', 'Bloco K e SPED em dia']],
+    proof: {
+      kind: 'case',
+      client: 'Tecnofer',
+      context: 'Metalúrgica · 50 colaboradores',
+      stats: [
+        ['−19%', 'de desperdício de matéria-prima'],
+        ['+22%', 'de performance na fabricação'],
+        ['37%', 'dos processos manuais automatizados'],
+      ],
+    },
     feats: ['Plano de corte de chapa (nesting)', 'Custo de dobra, solda e usinagem', 'Ordem de produção por posto', 'Apontamento por coletor', 'Sucata e retalho controlados', 'Bloco K · SPED Fiscal']
   },
   {
     id: 'moveleira',
     label: 'Moveleira',
+    href: '/moveleiras',
     Icon: IconTree,
     title: 'Do projeto sob medida ao móvel expedido.',
     body: 'Precificação de móvel planejado com chapa de MDF, ferragens e fitas de borda na ficha técnica. Plano de corte que aproveita cada placa, controle de produção por ambiente e expedição sem peça faltando no romaneio.',
-    stats: [['−41%', 'sobra de MDF'], ['+22%', 'margem por projeto'], ['1 clique', 'do projeto à OP']],
+    proof: {
+      kind: 'capabilities',
+      title: 'O que o sistema faz',
+      items: [
+        'Calcula o aproveitamento da placa antes de cortar',
+        'Precifica o projeto com ferragens e fitas de borda inclusas',
+        'Transforma o projeto aprovado em ordem de produção',
+        'Confere o romaneio antes de a carga sair',
+      ],
+    },
     feats: ['Plano de corte de MDF (nesting)', 'Ficha técnica com ferragens e fitas', 'Precificação de móvel planejado', 'Produção por ambiente/pedido', 'Romaneio e expedição conferidos', 'Integração com projeto/marcenaria']
   }
 ];
@@ -84,15 +113,51 @@ export const Verticals = () => {
           </div>
 
           <div className="rounded-2xl border border-line bg-paper p-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">resultados médios · 12 meses</p>
-            <div className="mt-5 space-y-6">
-              {v.stats.map(([n, l]) => (
-                <div key={l} className="border-b border-line pb-5 last:border-0 last:pb-0">
-                  <p className="font-serif text-5xl leading-none tracking-tightest text-ink">{n}</p>
-                  <p className="mt-2 text-[14px] text-muted">{l}</p>
+            {v.proof.kind === 'case' ? (
+              <>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                  resultado de um cliente
+                </p>
+                <p className="mt-2 font-serif text-2xl leading-none text-ink">{v.proof.client}</p>
+                <p className="mt-1 text-[13px] text-muted">{v.proof.context}</p>
+                <div className="mt-5 space-y-6">
+                  {v.proof.stats.map(([n, l]) => (
+                    <div key={l} className="border-b border-line pb-5 last:border-0 last:pb-0">
+                      <p className="font-serif text-5xl leading-none tracking-tightest text-ink">{n}</p>
+                      <p className="mt-2 text-[14px] text-muted">{l}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+                <p className="mt-5 text-[12px] leading-relaxed text-muted">
+                  Números medidos na operação da {v.proof.client}. Resultados variam conforme porte,
+                  mix de produtos e processos de cada fábrica.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                  {v.proof.title}
+                </p>
+                <ul className="mt-5 space-y-4">
+                  {v.proof.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2.5 border-b border-line pb-4 text-[15px] leading-snug text-ink/85 last:border-0 last:pb-0"
+                    >
+                      <IconCheck size={16} className="mt-0.5 shrink-0 text-moss-700" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            <Link
+              href={v.href}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-moss-700 px-5 py-3 text-sm text-bg transition hover:bg-moss-800"
+            >
+              Ver a solução para {v.label.toLowerCase()}s <IconArrow size={15} />
+            </Link>
           </div>
         </div>
       </div>

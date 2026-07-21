@@ -17,6 +17,20 @@ create table if not exists public.leads (
 );
 create index if not exists leads_created_at_idx on public.leads (created_at);
 
+-- Campos de qualificação do formulário de marketing (LeadForm).
+-- Idempotente: rodar de novo não quebra nada.
+alter table public.leads add column if not exists role       text not null default '';
+alter table public.leads add column if not exists segment    text not null default '';
+alter table public.leads add column if not exists system     text not null default '';
+alter table public.leads add column if not exists timeline   text not null default '';
+alter table public.leads add column if not exists challenges text[] not null default '{}';
+alter table public.leads add column if not exists message    text not null default '';
+-- Origem de campanha (utm_*, referrer) para atribuição.
+alter table public.leads add column if not exists utm        jsonb not null default '{}'::jsonb;
+-- Prova de consentimento (LGPD art. 8º): o titular aceitou e quando.
+alter table public.leads add column if not exists consent    boolean not null default false;
+alter table public.leads add column if not exists consent_at timestamptz;
+
 -- Mensagens do formulário de contato
 create table if not exists public.contacts (
   id          bigint generated always as identity primary key,

@@ -1,87 +1,179 @@
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 
-const services: [string, string][] = [
-  ['App Web · venturerp.com', '99,98%'],
-  ['API Pública', '99,99%'],
-  ['Emissão NF-e (todas SEFAZs)', '99,94%'],
-  ['SPED & Bloco K', '99,97%'],
-  ['PCP & Apontamento (coletor)', '99,99%'],
-  ['Plano de Corte & Nesting', '99,99%'],
-  ['Mobile · iOS + Android', '100%']
-];
-
-const incidents = [
-  ['28 abr · resolvido em 12min', 'Latência elevada na emissão de NF-e (SP)', 'menor'],
-  ['11 abr · janela programada', 'Manutenção em readonly — banco principal', 'programado'],
-  ['02 mar · resolvido em 4min', 'Falha pontual no webhook de Open Finance (Itaú)', 'menor']
-];
-
 export const metadata = { title: 'Status · VentureERP' };
 
-// Deterministic uptime bar so SSR/CSR render identically (no hydration mismatch).
-const uptimeBars = (seed: number) =>
-  Array.from({ length: 90 }).map((_, i) => {
-    const v = Math.sin(seed * 13 + i * 7);
-    return v > 0.97 ? 'warn' : '';
-  });
+// O status precisa refletir o estado atual, não uma versão em cache.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export default function StatusPage() {
+const BACKEND_URL = process.env.BACKEND_HEALTH_URL || 'http://localhost:5070';
+
+type Health = 'up' | 'down' | 'unknown';
+
+type Component = {
+  name: string;
+  detail: string;
+  state: Health;
+};
+
+async function probe(path: string, timeoutMs = 4000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${BACKEND_URL}${path}`, {
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    return { ok: res.ok, body };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function readStatus(): Promise<Component[]> {
+  const [live, ready] = await Promise.all([probe('/health/live'), probe('/health/ready')]);
+
+  const api: Health = live === null ? 'unknown' : live.ok ? 'up' : 'down';
+
+  // A readiness só reporta o banco quando a própria API responde. Se a API está
+  // inalcançável não sabemos o estado do banco — e dizer "up" seria inventar.
+  let database: Health = 'unknown';
+  if (ready !== null) {
+    database = ready.body?.database === 'up' ? 'up' : 'down';
+  }
+
+  return [
+    {
+      name: 'API · core-api',
+      detail: 'Serviço que responde às requisições do sistema',
+      state: api,
+    },
+    {
+      name: 'Banco de dados',
+      detail: 'Conexão verificada a cada consulta a esta página',
+      state: database,
+    },
+  ];
+}
+
+const LABEL: Record<Health, string> = {
+  up: 'operacional',
+  down: 'fora do ar',
+  unknown: 'indisponível',
+};
+
+const DOT: Record<Health, string> = {
+  up: 'bg-moss-500',
+  down: 'bg-red-500',
+  unknown: 'bg-mustard-400',
+};
+
+const TEXT: Record<Health, string> = {
+  up: 'text-moss-700',
+  down: 'text-red-600',
+  unknown: 'text-mustard-500',
+};
+
+export default async function StatusPage() {
+  const components = await readStatus();
+  const checkedAt = new Date();
+
+  const overall: Health = components.some((c) => c.state === 'down')
+    ? 'down'
+    : components.some((c) => c.state === 'unknown')
+      ? 'unknown'
+      : 'up';
+
+  const headline =
+    overall === 'up'
+      ? 'Tudo operacional'
+      : overall === 'down'
+        ? 'Instabilidade detectada'
+        : 'Não foi possível verificar';
+
   return (
     <>
       <header className="border-b border-line bg-paper">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Logo />
-          <Link href="/" className="text-sm text-muted hover:text-ink">← Voltar para o site</Link>
+          <Link href="/" className="text-sm text-muted hover:text-ink">
+            ← Voltar para o site
+          </Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-16">
         <div className="flex items-center gap-3">
-          <span className="grid h-3 w-3 place-items-center rounded-full bg-moss-500">
-            <span className="h-3 w-3 animate-ping rounded-full bg-moss-500 opacity-60"></span>
+          <span className={`relative grid h-3 w-3 place-items-center rounded-full ${DOT[overall]}`}>
+            {overall === 'up' && (
+              <span className="absolute h-3 w-3 animate-ping rounded-full bg-moss-500 opacity-60" />
+            )}
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">tudo operacional</span>
+          <span className={`font-mono text-[11px] uppercase tracking-[0.2em] ${TEXT[overall]}`}>
+            {LABEL[overall]}
+          </span>
         </div>
-        <h1 className="mt-4 font-serif text-6xl leading-[1] tracking-tight">Status do sistema</h1>
+
+        <h1 className="mt-4 font-serif text-6xl leading-[1] tracking-tight">{headline}</h1>
         <p className="mt-4 max-w-2xl text-[17px] text-muted">
-          Operação em tempo real dos serviços VentureERP. Histórico de 90 dias.
+          Verificação feita agora, direto nos serviços do VentureERP. Esta página consulta o
+          sistema a cada carregamento — não mostra um valor salvo.
         </p>
 
         <div className="mt-12 grid gap-3 rounded-2xl border border-line bg-paper p-6">
-          <div className="flex items-baseline justify-between border-b border-line pb-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
             <span className="font-serif text-2xl">Componentes</span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">90 dias · uptime acumulado</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+              verificado às{' '}
+              {checkedAt.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Sao_Paulo',
+              })}{' '}
+              (Brasília)
+            </span>
           </div>
-          {services.map(([n, up], idx) => (
-            <div key={n} className="grid grid-cols-[1.4fr_3fr_auto] items-center gap-6 border-b border-line/60 py-3 last:border-0">
-              <div className="flex items-center gap-2.5">
-                <span className="h-2 w-2 rounded-full bg-moss-500"></span>
-                <span className="text-[14px] text-ink">{n}</span>
+
+          {components.map((c) => (
+            <div
+              key={c.name}
+              className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line/60 py-4 last:border-0"
+            >
+              <div className="flex items-start gap-2.5">
+                <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${DOT[c.state]}`} />
+                <span>
+                  <span className="block text-[15px] text-ink">{c.name}</span>
+                  <span className="mt-0.5 block text-[13px] text-muted">{c.detail}</span>
+                </span>
               </div>
-              <div className="grid grid-cols-[repeat(90,minmax(0,1fr))] gap-[2px]">
-                {uptimeBars(idx + 1).map((cls, i) => (
-                  <span key={i} className={`h-6 rounded-[2px] ${cls === 'warn' ? 'bg-mustard-400' : 'bg-moss-500'}`} />
-                ))}
-              </div>
-              <span className="font-mono text-[11px] text-moss-700">{up}</span>
+              <span className={`font-mono text-[11px] uppercase tracking-[0.14em] ${TEXT[c.state]}`}>
+                {LABEL[c.state]}
+              </span>
             </div>
           ))}
         </div>
 
         <div className="mt-10 rounded-2xl border border-line bg-paper p-6">
-          <p className="font-serif text-2xl">Incidentes recentes</p>
-          <ul className="mt-4 divide-y divide-line text-[14px]">
-            {incidents.map(([d, t, sev], i) => (
-              <li key={i} className="flex flex-wrap items-center gap-x-6 gap-y-1 py-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">{d}</span>
-                <span className="text-ink">{t}</span>
-                <span className={`ml-auto rounded-full px-2 py-0.5 font-mono text-[10px] text-moss-800 ${sev === 'menor' ? 'bg-mustard-300/40' : 'bg-moss-50'}`}>
-                  {sev}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <p className="font-serif text-2xl">Histórico</p>
+          <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted">
+            Ainda não publicamos histórico de disponibilidade nem registro de incidentes. Estamos
+            montando o monitoramento contínuo — quando houver medição acumulada, o histórico de 90
+            dias aparece aqui. Enquanto isso, esta página mostra apenas o estado atual, que é o que
+            conseguimos verificar de fato.
+          </p>
+          <p className="mt-4 text-[14px] text-muted">
+            Problema em produção?{' '}
+            <a
+              href="mailto:contato@venturerp.com"
+              className="text-moss-700 underline-offset-2 hover:underline"
+            >
+              contato@venturerp.com
+            </a>
+          </p>
         </div>
       </main>
 
@@ -90,8 +182,12 @@ export default function StatusPage() {
           <span>© 2026 VentureERP Tecnologia S.A.</span>
           <span className="flex gap-5">
             <Link href="/">Site</Link>
-            <Link href="/privacidade" className="hover:text-moss-700">Privacidade</Link>
-            <Link href="/termos" className="hover:text-moss-700">Termos</Link>
+            <Link href="/privacidade" className="hover:text-moss-700">
+              Privacidade
+            </Link>
+            <Link href="/termos" className="hover:text-moss-700">
+              Termos
+            </Link>
           </span>
         </div>
       </footer>

@@ -24,7 +24,7 @@ const modules: Record<string, Module> = {
     body: 'Nesting automático de chapa de aço e MDF que reduz a sobra. Veja o aproveitamento de cada placa antes de cortar e pare de jogar matéria-prima na caçamba.',
     feats: ['Nesting automático de chapa e MDF', 'Aproveitamento por plano de corte', 'Cálculo de fita de borda e ferragens', 'Controle de retalho aproveitável', 'Otimização por espessura e cor', 'Geração de etiqueta de peça', 'Exportação para máquina de corte'],
     conn: ['Engenharia → consumo da ficha técnica', 'Estoque → baixa de chapa e retorno de retalho', 'PCP → corte vira etapa da OP', 'Custos → matéria-prima real por peça'],
-    kpis: [['−41%', 'sobra de MDF e chapa'], ['+ peças', 'na mesma matéria-prima', ], ['Antes de cortar', 'você vê o aproveitamento']]
+    kpis: [['Menos sobra', 'de MDF e chapa'], ['+ peças', 'na mesma matéria-prima', ], ['Antes de cortar', 'você vê o aproveitamento']]
   },
   pcp: {
     title: 'PCP & Chão de Fábrica.',
@@ -38,21 +38,21 @@ const modules: Record<string, Module> = {
     body: 'Precificação de peça sob medida com custo real, proposta com aprovação digital e CRM de funil. Do orçamento à NF emitida sem refazer cadastro — e sem orçamento na gaveta.',
     feats: ['Precificação por ficha técnica real', 'Margem-alvo por produto e cliente', 'Proposta com aprovação digital', 'Funil de vendas (CRM) visual', 'Conversão de orçamento em OP', 'Tabelas de preço e descontos por alçada', 'Histórico de propostas por cliente'],
     conn: ['Engenharia → custo de material e processo', 'PCP → orçamento aprovado abre a OP', 'Fiscal → NF emitida na conversão', 'Custos → margem real vs. orçada'],
-    kpis: [['2,6×', 'mais rápido para orçar'], ['+ margem', 'com preço no custo certo'], ['1 clique', 'do orçamento à produção']]
+    kpis: [['Mais rápido', 'para montar o orçamento'], ['+ margem', 'com preço no custo certo'], ['1 clique', 'do orçamento à produção']]
   },
   estoque: {
     title: 'Estoque & Compras.',
     body: 'Matéria-prima, produto em processo e acabado num só lugar. O MRP liga a necessidade da OP direto ao pedido de compra — máquina não para por falta de material.',
     feats: ['MRP: necessidade da OP gera a compra', 'Três estágios: MP, em processo, acabado', 'Leitura por coletor (Android/iOS)', 'Rastreio de lote e localização', 'Controle de retalho aproveitável', 'Inventário cíclico assistido', 'Cotação e pedido de compra'],
     conn: ['Engenharia → lista de material da peça', 'Plano de corte → baixa e retorno de retalho', 'PCP → consumo apontado na OP', 'Fiscal → entrada de NF de compra'],
-    kpis: [['Zero', 'parada por falta de material'], ['−42%', 'ruptura de matéria-prima'], ['+28%', 'giro de estoque']]
+    kpis: [['MRP', 'necessidade vira pedido de compra'], ['Menos ruptura', 'de matéria-prima'], ['Retalho', 'controlado e reaproveitado']]
   },
   fiscal: {
     title: 'Fiscal Industrial & Custos.',
     body: 'NF-e, Bloco K, SPED e custo real por OP gerados automaticamente. Conformidade da indústria sem consultoria — e a margem de cada peça na palma da mão.',
     feats: ['NF-e e NFC-e da indústria', 'Bloco K · livro de produção e estoque', 'SPED Fiscal e Contribuições', 'Custo real por OP e por peça', 'Manifesto MDFe e CTe', 'Regras tributárias por produto e UF', 'Atualização de layout antes do prazo'],
     conn: ['Vendas → NF emitida na conversão', 'PCP → produção e consumo no Bloco K', 'Estoque → entrada/saída sincronizada', 'Orçamento → margem real vs. orçada'],
-    kpis: [['Automático', 'Bloco K e SPED'], ['100%', 'conformidade multi-UF'], ['Por OP', 'custo e margem reais']]
+    kpis: [['Automático', 'Bloco K e SPED'], ['Multi-UF', 'regras tributárias por produto'], ['Por OP', 'custo e margem reais']]
   }
 };
 

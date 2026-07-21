@@ -20,26 +20,25 @@ export const Hero = () => (
           ERP para metalúrgicas e moveleiras
         </span>
         <h1 className="mt-6 font-serif text-[58px] leading-[0.96] tracking-tightest text-ink md:text-[82px]">
-          Chega de orçar peça
+          Você produz sob medida.
           <br />
-          no escuro e{" "}
           <span className="italic text-moss-700">
             <Squiggle />
-            perder na sobra.
+            Seu sistema também deveria.
           </span>
         </h1>
 
         <p className="mt-6 max-w-[560px] text-lg leading-relaxed text-muted">
-          Do orçamento ao chão de fábrica: ficha técnica, plano de corte de chapa
-          e MDF, ordem de produção, custo real por peça e fiscal industrial
-          (Bloco K) — tudo em um sistema só. Feito para quem vive de produção sob
-          medida.
+          ERP genérico não sabe calcular o custo de uma peça que nunca foi feita
+          antes. O VentureERP sabe: ele liga o orçamento à ficha técnica, ao
+          plano de corte, à produção e ao fiscal — para você dar o preço certo e
+          entregar no prazo, sem descobrir o prejuízo depois.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
             href="/agendar"
-            className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-base text-bg transition hover:bg-moss-900"
+            className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-ink px-6 py-3.5 text-base text-bg transition hover:bg-moss-900"
           >
             Agendar demonstração
             <IconArrow
@@ -48,29 +47,25 @@ export const Hero = () => (
             />
           </Link>
           <Link
-            href="/demo"
-            className="group inline-flex items-center gap-2 rounded-full border border-ink/15 bg-transparent px-6 py-3.5 text-base text-ink transition hover:border-ink/40"
+            href="/diagnostico"
+            className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-ink/15 bg-transparent px-6 py-3.5 text-base text-ink transition hover:border-ink/40"
           >
             <span className="grid h-7 w-7 place-items-center rounded-full bg-mustard-300 text-moss-800">
               <IconBolt size={14} />
             </span>
-            Ver o sistema funcionando
+            Diagnóstico gratuito
           </Link>
         </div>
 
-        <p className="mt-4 text-[13px] text-muted">
-          Planos a partir de{" "}
-          <Link href="/#planos" className="text-moss-700 underline-offset-2 hover:underline">
-            R$ 1.267/mês
-          </Link>{" "}
-          · sem licença por usuário · implantação assistida em 30 dias.
+        <p className="mt-4 text-[13px] leading-relaxed text-muted">
+          Sem licença por usuário · migração inclusa · suporte de quem entende de produção.
         </p>
 
         <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-6">
           {[
-            ["30 dias", "do contrato ao chão de fábrica"],
-            ["−31%", "de sobra de chapa e MDF"],
-            ["100%", "Bloco K e SPED em dia"],
+            ["30 dias", "do contrato ao sistema no ar"],
+            ["Custo real", "de cada peça, antes do preço"],
+            ["Bloco K", "e SPED gerados sozinhos"],
           ].map(([n, l]) => (
             <div key={l}>
               <dt className="font-serif text-3xl text-ink">{n}</dt>

@@ -24,25 +24,25 @@ import {
   IconTree,
 } from "./Icons";
 import {
-  MiniFinance,
   MiniInventory,
+  MiniProduction,
   MiniSales,
   MiniFiscal,
   MiniHR,
   MiniBI,
 } from "./Illustrations";
 import { Counter } from "./Extras";
-import { Scheduler } from "./Scheduler";
+import { LeadForm } from "./LeadForm";
 import { legal } from "@/lib/legal";
 
 export const Trust = () => {
   const creds = [
-    "Bloco K & SPED nativos",
-    "Nesting de chapa e MDF",
-    "Custo real por OP",
-    "Ordem de produção no coletor",
-    "MRP de matéria-prima",
-    "Implantação assistida",
+    "Orçamento na ficha técnica",
+    "Plano de corte de chapa e MDF",
+    "Produção por etapa",
+    "Custo real por peça",
+    "Estoque com retalho",
+    "Bloco K & SPED",
   ];
   return (
     <section className="border-y border-line bg-paper py-10">
@@ -50,11 +50,11 @@ export const Trust = () => {
         <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           Tudo o que uma indústria precisa — em um sistema só
         </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mx-auto mt-6 grid max-w-4xl grid-cols-2 gap-3 md:grid-cols-3">
           {creds.map((c) => (
             <span
               key={c}
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-bg px-4 py-2 font-serif text-lg tracking-tight text-ink/70"
+              className="flex h-full items-center justify-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-bg px-4 py-2.5 text-center font-serif text-[17px] tracking-tight text-ink/75"
             >
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-moss-500" />
               {c}
@@ -66,12 +66,79 @@ export const Trust = () => {
   );
 };
 
+/**
+ * Bifurcação por setor logo abaixo do Hero.
+ *
+ * As páginas de setor concentram o conteúdo mais persuasivo do site, mas antes
+ * só eram alcançáveis pelo menu do topo — quem rolava a página direto nunca
+ * chegava nelas. Aqui o visitante se autoidentifica no primeiro scroll.
+ */
+export const SectorPicker = () => {
+  const sectors = [
+    {
+      href: "/metalurgicas",
+      label: "Metalúrgica",
+      Icon: IconFlame,
+      d: "Corte, dobra, solda, usinagem e pintura com custo real por operação — e o Bloco K saindo sozinho da produção apontada.",
+    },
+    {
+      href: "/moveleiras",
+      label: "Moveleira",
+      Icon: IconTree,
+      d: "Projeto sob medida precificado com MDF, ferragens e fitas de borda, plano de corte que aproveita a placa e romaneio conferido.",
+    },
+  ];
+  return (
+    <section className="mx-auto max-w-7xl px-6 pb-4 pt-16 lg:px-10">
+      <div className="reveal text-center">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
+          ·· comece por aqui
+        </span>
+        <h2 className="mt-3 font-serif text-4xl leading-[1.05] tracking-tight text-ink md:text-5xl">
+          O que a sua fábrica produz?
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-muted">
+          Cada setor tem material, processo e regra fiscal próprios. Escolha o
+          seu e veja o sistema no seu vocabulário.
+        </p>
+      </div>
+
+      <div className="reveal mt-10 grid gap-6 md:grid-cols-2" data-delay="1">
+        {sectors.map(({ href, label, Icon, d }) => (
+          <Link
+            key={href}
+            href={href}
+            className="group flex flex-col rounded-2xl border border-line bg-bg p-8 transition hover:border-moss-700 hover:shadow-sm"
+          >
+            <span className="grid h-14 w-14 place-items-center rounded-2xl bg-moss-50 text-moss-700 transition group-hover:bg-moss-100">
+              <Icon size={26} />
+            </span>
+            <p className="mt-6 font-serif text-3xl leading-tight text-ink">
+              {label}
+            </p>
+            <p className="mt-3 flex-1 text-[15px] leading-relaxed text-muted">
+              {d}
+            </p>
+            <span className="mt-6 inline-flex items-center gap-2 text-[15px] text-moss-700">
+              Ver a solução para {label.toLowerCase()}s
+              <IconArrow
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 export const Problem = () => {
   const pains = [
     {
       Icon: IconChartLine,
-      t: "Orçamento no chute",
-      d: "Você precifica peça sob medida no Excel, sem saber o custo real de material, processo e mão de obra. Aí fecha venda que dava prejuízo.",
+      t: "O preço sai da experiência, não da conta",
+      d: "Cada peça sob medida é orçada na planilha, no tempo que alguém acha que leva. Material, hora de máquina e mão de obra ficam de fora — e só no fim do mês você descobre se aquele pedido deu lucro ou pagou para produzir.",
     },
     {
       Icon: IconLayers,
@@ -80,8 +147,8 @@ export const Problem = () => {
     },
     {
       Icon: IconGear,
-      t: "Ordem de produção perdida",
-      d: "O cliente liga perguntando o pedido e ninguém sabe em que máquina está. Quadro branco, papel e WhatsApp não são controle de chão de fábrica.",
+      t: "Prazo vira adivinhação",
+      d: "Você sabe que o pedido está na fábrica. Mas ele passa por corte, dobra, solda e pintura — e dizer em qual dessas etapas ele está agora, e quanto falta para terminar, depende de alguém ir até lá perguntar.",
     },
     {
       Icon: IconReceipt,
@@ -91,12 +158,12 @@ export const Problem = () => {
     {
       Icon: IconBox,
       t: "Máquina parada por falta de material",
-      d: "Sem MRP ligado à produção, a matéria-prima acaba no meio da OP. Operador parado é o desperdício mais caro da fábrica.",
+      d: "A compra não conversa com o que está na fila de produção. A chapa acaba com a peça pela metade, a máquina para e o operador fica esperando material chegar — o desperdício mais caro que existe numa fábrica.",
     },
     {
       Icon: IconShield,
-      t: "Medo do Bloco K e do SPED",
-      d: "A obrigação fiscal da indústria exige rastrear consumo e produção. Sem sistema, é torcer para a auditoria não bater na porta.",
+      t: "Fiscal remontado à mão todo mês",
+      d: "Bloco K e SPED exigem comprovar tudo que entrou, foi consumido e foi produzido. Hoje isso custa horas da sua equipe e a conta do escritório de contabilidade, que remonta na planilha o que a fábrica já sabia.",
     },
   ];
   return (
@@ -106,13 +173,13 @@ export const Problem = () => {
           ·· você reconhece isso?
         </span>
         <h2 className="mt-3 font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
-          A fábrica produz.{" "}
-          <span className="italic text-moss-700">O dinheiro vaza</span> sem
-          ninguém ver.
+          O trabalho acontece, mas{" "}
+          <span className="italic text-moss-700">a informação se perde?</span>
         </h2>
         <p className="mt-5 text-lg leading-relaxed text-muted">
-          Não falta esforço no seu chão de fábrica — falta controle. Esses são os
-          seis vazamentos que mais corroem a margem de metalúrgicas e moveleiras.
+          Não falta esforço no seu chão de fábrica — falta informação na hora de
+          decidir. Estes são os seis pontos onde metalúrgicas e moveleiras mais
+          perdem dinheiro sem conseguir enxergar.
         </p>
       </div>
 
@@ -228,8 +295,8 @@ export const Modules = () => {
       slug: "engenharia",
       Icon: IconRuler,
       title: "Engenharia & Ficha Técnica",
-      body: "Estrutura de produto (BOM) multinível, roteiro de produção e tempos por operação. A mesma ficha alimenta o orçamento, a compra e o chão de fábrica.",
-      tags: ["BOM multinível", "Roteiro", "Tempos"],
+      body: "A receita completa de cada produto — materiais, etapas de fabricação e tempo de cada operação. A mesma ficha alimenta o orçamento, a compra e o chão de fábrica, sem cadastrar nada duas vezes.",
+      tags: ["Ficha técnica", "Roteiro", "Tempos"],
       Mini: MiniBI,
     },
     {
@@ -244,32 +311,32 @@ export const Modules = () => {
       slug: "pcp",
       Icon: IconGear,
       title: "PCP & Chão de Fábrica",
-      body: "Ordem de produção, sequenciamento por máquina, apontamento por coletor e OEE. Saiba onde está cada pedido e qual posto é o gargalo, em tempo real.",
-      tags: ["Ordem de produção", "Apontamento", "OEE"],
-      Mini: MiniSales,
+      body: "Cada pedido virando ordem de produção, distribuída por máquina e apontada pelo operador em cada etapa. Você vê em que posto o pedido está, qual deles está segurando a fila e quando a peça fica pronta.",
+      tags: ["Ordem de produção", "Etapa por máquina", "Prazo real"],
+      Mini: MiniProduction,
     },
     {
       slug: "orcamento",
       Icon: IconChartLine,
       title: "Orçamento & Vendas",
-      body: "Precificação de peça sob medida com custo real, proposta com aprovação digital e CRM de funil. Do orçamento à NF emitida sem refazer cadastro.",
-      tags: ["Precificação", "Proposta", "CRM"],
-      Mini: MiniFinance,
+      body: "Precificação de peça sob medida com custo real, proposta com aprovação digital e acompanhamento do funil de vendas. Do orçamento à nota emitida sem refazer cadastro.",
+      tags: ["Precificação", "Proposta", "Funil de vendas"],
+      Mini: MiniSales,
     },
     {
       slug: "estoque",
       Icon: IconBox,
       title: "Estoque & Compras",
-      body: "Matéria-prima, produto em processo e acabado num só lugar. MRP liga a necessidade da OP direto ao pedido de compra — máquina não para por falta de material.",
-      tags: ["MRP", "Matéria-prima", "Compras"],
+      body: "Matéria-prima, produto em processo e acabado num só lugar. O sistema olha o que a produção vai consumir e já sugere o pedido de compra — máquina não para esperando material.",
+      tags: ["Compra automática", "Matéria-prima", "Estoque"],
       Mini: MiniHR,
     },
     {
       slug: "fiscal",
       Icon: IconReceipt,
       title: "Fiscal Industrial & Custos",
-      body: "NF-e, Bloco K, SPED e custo real por OP gerados automaticamente. Conformidade da indústria sem consultoria — e a margem de cada peça na palma da mão.",
-      tags: ["NF-e", "Bloco K", "Custo por OP"],
+      body: "NF-e, Bloco K, SPED e o custo real de cada ordem de produção gerados automaticamente, a partir do que a fábrica apontou. Conformidade sem depender de consultoria — e a margem de cada peça na mão.",
+      tags: ["NF-e", "Bloco K", "Custo por ordem"],
       Mini: MiniFiscal,
     },
   ];
@@ -344,7 +411,7 @@ export const Compare = () => {
   const rows: [string, string, string, string][] = [
     ["Orçamento de peça sob medida", "Minutos, com ficha técnica real", "Horas no Excel, no chute", "Não calcula processo"],
     ["Sobra de chapa e MDF", "Plano de corte otimizado", "No olho do operador", "Não tem nesting"],
-    ["Custo real por peça", "Em tempo real, por OP", "Estimado no fim do mês", "Rateio genérico"],
+    ["Custo real por peça", "Em tempo real, por ordem", "Estimado no fim do mês", "Rateio genérico"],
     ["Ordem de produção", "Apontada no chão de fábrica", "Quadro branco e papel", "Módulo caro à parte"],
     ["Bloco K e SPED", "Gerados automaticamente", "Risco de multa", "Depende de consultoria"],
     ["Tempo até operar", "30 dias", "—", "8 a 18 meses"],
@@ -438,7 +505,7 @@ export const Band = () => (
         </p>
         <ul className="mt-8 space-y-3">
           {[
-            "Saiba o status de cada OP e quando o pedido fica pronto.",
+            "Saiba em que etapa cada pedido está e quando fica pronto.",
             "Veja o gargalo da fábrica antes que ele estoure o prazo.",
             "Custo real acumulado por ordem, peça e cliente — em tempo real.",
           ].map((t) => (
@@ -634,43 +701,44 @@ export const Stats = () => {
       prefix: "−",
       suffix: "%",
       l: "de desperdício de matéria-prima",
-      s: "estimativa baseada na Tecnofer",
+      s: "medido na Tecnofer",
     },
     {
       value: 22,
       prefix: "+",
       suffix: "%",
       l: "de performance na fabricação",
-      s: "projeção a partir de cliente real",
+      s: "medido na Tecnofer",
     },
     {
       value: 37,
       suffix: "%",
       l: "dos processos manuais automatizados",
-      s: "estimativa baseada na Tecnofer",
+      s: "medido na Tecnofer",
     },
     {
       value: 30,
       suffix: " dias",
       l: "da assinatura ao chão de fábrica operando",
-      s: "implantação 100% assistida",
+      s: "prazo de implantação assistida",
     },
   ];
   return (
     <section className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
       <div className="reveal max-w-3xl">
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
-          ·· projeção de resultados
+          ·· resultado de um cliente
         </span>
         <h2 className="mt-3 font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
-          O que sua fábrica{" "}
-          <span className="italic text-moss-700">para de perder</span> com o
+          O que a Tecnofer{" "}
+          <span className="italic text-moss-700">parou de perder</span> com o
           VentureERP.
         </h2>
         <p className="mt-5 text-[15px] leading-relaxed text-muted">
-          Estimativas baseadas nos resultados reais da Tecnofer. Os números
-          variam conforme o porte, o mix de produtos e os processos de cada
-          fábrica.
+          Números medidos na operação da Tecnofer — metalúrgica com 50
+          colaboradores — depois da troca das planilhas pelo VentureERP. Não são
+          uma média de mercado: resultados variam conforme o porte, o mix de
+          produtos e os processos de cada fábrica.
         </p>
       </div>
 
@@ -705,7 +773,7 @@ export const Workflow = () => {
     {
       n: "02",
       t: "Migração sem parar a produção",
-      d: "Importamos cadastro de produtos, estrutura (BOM), clientes, estoque e histórico. Validamos em paralelo ao seu sistema atual. Máquina não para, dado não se perde.",
+      d: "Importamos cadastro de produtos, fichas técnicas, clientes, estoque e histórico. Validamos tudo em paralelo ao seu sistema atual. Máquina não para, dado não se perde.",
     },
     {
       n: "03",
@@ -723,13 +791,15 @@ export const Workflow = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="reveal grid items-end gap-6 md:grid-cols-[1.1fr_1fr]">
           <h2 className="font-serif text-5xl leading-[1.05] tracking-tight text-ink md:text-6xl">
-            Do contrato à primeira{" "}
-            <span className="italic text-moss-700">OP no preço</span>: 30 dias.
+            Você assina hoje.{" "}
+            <span className="italic text-moss-700">Em 30 dias</span> a fábrica
+            está rodando.
           </h2>
           <p className="text-lg leading-relaxed text-muted">
-            Implantação não é só software — é um time dentro da sua fábrica. Do
-            kick-off ao primeiro mês fechado no custo certo. E não vai embora
-            depois que o contrato assina.
+            Implantação não é só entregar um login e desejar boa sorte — é um
+            time dentro da sua fábrica configurando o sistema com os seus
+            produtos, as suas máquinas e a sua equipe. E que continua junto
+            depois que tudo está no ar.
           </p>
         </div>
 
@@ -766,7 +836,7 @@ export const Testimonials = () => {
   const metrics: [string, string][] = [
     ["−19%", "de desperdício de matéria-prima"],
     ["+22%", "de performance na fabricação"],
-    ["37%", "dos processos automatizados"],
+    ["37%", "dos processos manuais automatizados"],
   ];
   return (
     <section id="cliente" className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
@@ -900,14 +970,14 @@ export const CTA = () => (
             <IconFactory size={14} /> 30 minutos que mudam a fábrica
           </span>
           <h2 className="mt-6 font-serif text-5xl leading-[1] tracking-tightest md:text-6xl">
-            Pronto para tirar a fábrica
+            Quer ver isso rodando
             <br />
-            do <span className="italic text-mustard-300">escuro</span>?
+            na <span className="italic text-mustard-300">sua fábrica</span>?
           </h2>
           <p className="mt-5 max-w-md text-[17px] leading-relaxed text-bg/75">
-            Escolha o horário ao lado. Um especialista do seu setor mostra o
-            VentureERP resolvendo as suas dores reais — orçamento, sobra de
-            material e ordem de produção. Sem PowerPoint, sem script.
+            Um especialista do seu setor mostra o VentureERP resolvendo as suas
+            dores reais — o preço da peça, o aproveitamento do material e o
+            acompanhamento da produção. Sem apresentação de slides, sem script.
           </p>
           <ul className="mt-7 space-y-2.5">
             {[
@@ -926,31 +996,34 @@ export const CTA = () => (
           </p>
         </div>
 
-        <Scheduler source="Home · CTA final" />
+        <div className="rounded-[26px] border border-bg/15 bg-moss-800/40 p-8 text-center md:p-10">
+          <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-mustard-300 text-moss-900">
+            <IconCalendar size={28} />
+          </span>
+          <p className="mt-6 font-serif text-3xl leading-snug text-bg">
+            Escolha o dia e o horário
+          </p>
+          <p className="mt-3 text-[15px] leading-relaxed text-bg/70">
+            A agenda mostra os horários realmente livres. Você reserva em um clique e recebe a
+            confirmação e o lembrete por e-mail.
+          </p>
+          <Link
+            href="/agendar"
+            className="group mt-7 inline-flex items-center gap-2 rounded-full bg-mustard-300 px-7 py-4 text-base text-moss-900 transition hover:bg-mustard-400"
+          >
+            Ver horários disponíveis
+            <IconArrow size={18} className="transition-transform group-hover:translate-x-1" />
+          </Link>
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-bg/50">
+            30 minutos · online · sem custo
+          </p>
+        </div>
       </div>
     </div>
   </section>
 );
 
 export const ContactSection = () => {
-  const [form, setForm] = useState({ name: "", email: "", subject: "Dúvida comercial", message: "" });
-  const [state, setState] = useState<"idle" | "loading" | "ok" | "error">("idle");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setState("loading");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      setState(res.ok ? "ok" : "error");
-    } catch {
-      setState("error");
-    }
-  };
-
   return (
     <section id="contato" className="border-t border-line bg-paper py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -1005,84 +1078,7 @@ export const ContactSection = () => {
           </div>
 
           <div className="reveal" data-delay="1">
-            {state === "ok" ? (
-              <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-line bg-bg p-10 text-center">
-                <span className="grid h-14 w-14 place-items-center rounded-full bg-moss-50 text-moss-700">
-                  <IconCheck size={24} />
-                </span>
-                <h3 className="font-serif text-2xl text-ink">Mensagem enviada!</h3>
-                <p className="max-w-xs text-[14px] text-muted">Recebemos sua mensagem e retornaremos em até 1 dia útil no e-mail informado.</p>
-              </div>
-            ) : (
-              <form
-                className="rounded-2xl border border-line bg-bg p-7"
-                onSubmit={handleSubmit}
-              >
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Nome *</span>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Seu nome"
-                      value={form.name}
-                      onChange={(e) => setForm((f: typeof form) => ({ ...f, name: e.target.value }))}
-                      className="mt-1.5 w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-moss-700 focus:outline-none"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">E-mail *</span>
-                    <input
-                      type="email"
-                      required
-                      placeholder="voce@empresa.com.br"
-                      value={form.email}
-                      onChange={(e) => setForm((f: typeof form) => ({ ...f, email: e.target.value }))}
-                      className="mt-1.5 w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-moss-700 focus:outline-none"
-                    />
-                  </label>
-                </div>
-                <label className="mt-4 block">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Assunto</span>
-                  <select
-                    value={form.subject}
-                    onChange={(e) => setForm((f: typeof form) => ({ ...f, subject: e.target.value }))}
-                    className="mt-1.5 w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-moss-700 focus:outline-none"
-                  >
-                    <option>Dúvida comercial</option>
-                    <option>Proposta / Orçamento</option>
-                    <option>Suporte técnico</option>
-                    <option>Parceria</option>
-                    <option>Imprensa</option>
-                    <option>Outro</option>
-                  </select>
-                </label>
-                <label className="mt-4 block">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Mensagem *</span>
-                  <textarea
-                    required
-                    rows={4}
-                    placeholder="Conta um pouco sobre sua fábrica e como podemos ajudar…"
-                    value={form.message}
-                    onChange={(e) => setForm((f: typeof form) => ({ ...f, message: e.target.value }))}
-                    className="mt-1.5 w-full resize-none rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-moss-700 focus:outline-none"
-                  />
-                </label>
-                {state === "error" && (
-                  <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">
-                    Algo deu errado. Tente novamente ou nos envie um e-mail diretamente.
-                  </p>
-                )}
-                <button
-                  type="submit"
-                  disabled={state === "loading"}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-moss-800 px-5 py-3 text-sm text-bg transition hover:bg-moss-900 disabled:opacity-60"
-                >
-                  {state === "loading" ? "Enviando…" : "Enviar mensagem"}
-                  {state !== "loading" && <IconArrow size={15} />}
-                </button>
-              </form>
-            )}
+            <LeadForm source="Home · Contato" />
           </div>
         </div>
       </div>
@@ -1105,9 +1101,9 @@ const footerCols: [string, [string, string][]][] = [
   [
     "Empresa",
     [
-      ["A plataforma", "/#plataforma"],
-      ["Para o seu setor", "/#setores"],
-      ["Planos", "/#planos"],
+      ["A plataforma", "/#modulos"],
+      ["Metalúrgicas", "/metalurgicas"],
+      ["Moveleiras", "/moveleiras"],
       ["Cases", "/cases"],
       ["Implantação", "/#workflow"],
     ],

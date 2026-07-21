@@ -6,11 +6,10 @@ import { Logo } from './Logo';
 import { IconArrow } from './Icons';
 
 const links: [string, string][] = [
-  ['Plataforma', '/#plataforma'],
   ['Módulos', '/#modulos'],
-  ['Implantação', '/#workflow'],
-  ['Setores', '/#setores'],
-  ['Planos', '/#planos'],
+  ['Metalúrgicas', '/metalurgicas'],
+  ['Moveleiras', '/moveleiras'],
+  ['Diagnóstico', '/diagnostico'],
   ['Demo', '/demo'],
 ];
 
@@ -30,7 +29,7 @@ export const Nav = () => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Logo />
-        <nav className="hidden items-center gap-8 text-sm text-ink/80 md:flex">
+        <nav className="hidden items-center gap-5 text-sm text-ink/80 lg:flex">
           {links.map(([l, h]) => (
             h.startsWith('/') ? (
               <Link key={l} href={h} className={`relative transition hover:text-ink ${l === 'Demo' ? 'font-medium text-moss-700' : ''}`}>
@@ -44,7 +43,7 @@ export const Nav = () => {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <Link href="/#contato" className="hidden text-sm text-ink/80 hover:text-ink md:inline">Contato</Link>
+          <Link href="/#contato" className="hidden text-sm text-ink/80 hover:text-ink lg:inline">Contato</Link>
           <Link
             href="/agendar"
             className="group inline-flex items-center gap-2 rounded-full bg-moss-700 px-4 py-2 text-sm text-bg shadow-sm transition hover:bg-moss-800"
@@ -54,7 +53,7 @@ export const Nav = () => {
           </Link>
           <button
             onClick={() => setOpen(!open)}
-            className="grid h-9 w-9 place-items-center rounded-full border border-line bg-paper md:hidden"
+            className="grid h-9 w-9 place-items-center rounded-full border border-line bg-paper lg:hidden"
             aria-label="Menu"
           >
             <span className="space-y-1.5">
@@ -65,7 +64,7 @@ export const Nav = () => {
         </div>
       </div>
       {open && (
-        <div className="border-t border-line bg-bg md:hidden">
+        <div className="border-t border-line bg-bg lg:hidden">
           <div className="space-y-3 px-6 py-5">
             {links.map(([l, h]) => (
               h.startsWith('/') ? (

@@ -294,16 +294,90 @@ export const MiniInventory = () => (
   </Mini>
 );
 
+/**
+ * Chão de fábrica: as etapas reais por que passa uma peça, com o avanço de
+ * cada posto. Substitui o funil de vendas que estava ilustrando o PCP por
+ * engano — funil é jornada comercial, não roteiro de produção.
+ */
+export const MiniProduction = () => {
+  const stages: [string, number][] = [
+    ['Corte', 1],
+    ['Dobra', 1],
+    ['Solda', 0.55],
+    ['Pintura', 0],
+  ];
+  return (
+    <Mini>
+      <svg viewBox="0 0 240 110" className="absolute inset-0 h-full w-full">
+        <text x="18" y="22" fontSize="9" fontFamily="Geist Mono" fill="#8A8778">
+          ORDEM 4821
+        </text>
+        {stages.map(([label, done], i) => {
+          const x = 18 + i * 55;
+          const complete = done === 1;
+          const active = done > 0 && done < 1;
+          return (
+            <g key={label}>
+              <rect
+                x={x}
+                y="38"
+                width="46"
+                height="34"
+                rx="6"
+                fill={complete ? '#EEF1E4' : '#fff'}
+                stroke={active ? '#5D7822' : '#DCD6B8'}
+                strokeWidth={active ? 1.6 : 1}
+              />
+              <text
+                x={x + 23}
+                y="52"
+                fontSize="8.5"
+                textAnchor="middle"
+                fontFamily="Geist Mono"
+                fill="#324512"
+              >
+                {label}
+              </text>
+              {/* barra de avanço do posto */}
+              <rect x={x + 9} y="59" width="28" height="4" rx="2" fill="#E7E3D0" />
+              {done > 0 && (
+                <rect
+                  x={x + 9}
+                  y="59"
+                  width={28 * done}
+                  height="4"
+                  rx="2"
+                  fill={complete ? '#5D7822' : '#CBAB1F'}
+                />
+              )}
+              {i < stages.length - 1 && (
+                <path
+                  d={`M${x + 46} 55 L${x + 55} 55`}
+                  stroke="#324512"
+                  strokeWidth="1.2"
+                />
+              )}
+            </g>
+          );
+        })}
+        <text x="18" y="92" fontSize="9" fontFamily="Geist Mono" fill="#5D7822">
+          entrega prevista · 24/07
+        </text>
+      </svg>
+    </Mini>
+  );
+};
+
 export const MiniSales = () => (
   <Mini>
     <svg viewBox="0 0 240 110" className="absolute inset-0 h-full w-full">
-      {['Lead', 'Qual', 'Prop', 'Fech'].map((l, i) => (
+      {['Contato', 'Cotação', 'Proposta', 'Fechado'].map((l, i) => (
         <g key={l}>
           <rect x={18 + i * 55} y="38" width="46" height="34" rx="6" fill="#fff" stroke="#DCD6B8" />
           <text
             x={41 + i * 55}
-            y="59"
-            fontSize="10"
+            y="58"
+            fontSize="7.5"
             textAnchor="middle"
             fontFamily="Geist Mono"
             fill="#324512"
