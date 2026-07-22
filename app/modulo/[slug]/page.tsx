@@ -1,7 +1,10 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { IconCheck } from '@/components/Icons';
+import { BreadcrumbJsonLd } from '@/components/BreadcrumbJsonLd';
+import { SITE_URL } from '@/lib/site';
 
 type Module = {
   title: string;
@@ -59,17 +62,62 @@ const modules: Record<string, Module> = {
 export const generateStaticParams = () =>
   Object.keys(modules).map((slug) => ({ slug }));
 
-export const generateMetadata = ({ params }: { params: { slug: string } }) => {
+export function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Metadata {
   const m = modules[params.slug];
-  return { title: `${m?.title.replace('.', '') || 'Módulo'} · VentureERP` };
-};
+  if (!m) return { title: 'Módulo' };
+
+  // O template do layout ("%s · VentureERP") já adiciona o sufixo — aqui vai só
+  // o nome limpo do módulo, sem duplicar a marca.
+  const clean = m.title.replace(/\.$/, '');
+  const description =
+    m.body.length > 160 ? `${m.body.slice(0, 157).trimEnd()}…` : m.body;
+  const url = `${SITE_URL}/modulo/${params.slug}`;
+
+  return {
+    title: clean,
+    description,
+    keywords: [
+      clean,
+      ...m.feats.slice(0, 6),
+      'ERP para metalúrgica',
+      'ERP para moveleira',
+    ],
+    alternates: { canonical: `/modulo/${params.slug}` },
+    openGraph: {
+      type: 'article',
+      url,
+      title: `${clean} · VentureERP`,
+      description,
+      siteName: 'VentureERP',
+      locale: 'pt_BR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${clean} · VentureERP`,
+      description,
+    },
+  };
+}
 
 export default function ModulePage({ params }: { params: { slug: string } }) {
   const m = modules[params.slug];
   if (!m) notFound();
 
+  const clean = m.title.replace(/\.$/, '');
+
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Início', path: '/' },
+          { name: 'Módulos', path: '/#modulos' },
+          { name: clean, path: `/modulo/${params.slug}` },
+        ]}
+      />
       <header className="border-b border-line bg-bg/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Logo />

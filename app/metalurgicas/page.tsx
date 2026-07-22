@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SectorPage, metalurgicas } from '@/components/SectorPage';
+import { BreadcrumbJsonLd } from '@/components/BreadcrumbJsonLd';
 
 const title = 'ERP para Metalúrgicas';
 const description =
@@ -37,5 +38,15 @@ export const metadata: Metadata = {
 };
 
 export default function MetalurgicasPage() {
-  return <SectorPage sector={metalurgicas} />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Início', path: '/' },
+          { name: 'ERP para Metalúrgicas', path: '/metalurgicas' },
+        ]}
+      />
+      <SectorPage sector={metalurgicas} />
+    </>
+  );
 }

@@ -17,7 +17,7 @@ export function StructuredData() {
       name: SITE.name,
       legalName: SITE.legalName,
       url: SITE_URL,
-      logo: `${SITE_URL}/icon`,
+      logo: `${SITE_URL}/favicon.png`,
       email: SITE.email,
       description: SITE.description,
       ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),

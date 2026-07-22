@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SectorPage, moveleiras } from '@/components/SectorPage';
+import { BreadcrumbJsonLd } from '@/components/BreadcrumbJsonLd';
 
 const title = 'ERP para Moveleiras';
 const description =
@@ -37,5 +38,15 @@ export const metadata: Metadata = {
 };
 
 export default function MoveleirasPage() {
-  return <SectorPage sector={moveleiras} />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Início', path: '/' },
+          { name: 'ERP para Moveleiras', path: '/moveleiras' },
+        ]}
+      />
+      <SectorPage sector={moveleiras} />
+    </>
+  );
 }
