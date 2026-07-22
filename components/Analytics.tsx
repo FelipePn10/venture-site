@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 
 /**
- * Carrega Google Analytics e Meta Pixel SOMENTE após o consentimento do
- * usuário (banner de cookies). Enquanto o usuário não aceitar, nenhum script
- * de rastreamento é injetado — exigência da LGPD/ANPD para cookies não
- * essenciais.
+ * Carrega Google Analytics, Meta Pixel e Microsoft Clarity SOMENTE após o
+ * consentimento do usuário (banner de cookies). Enquanto o usuário não
+ * aceitar, nenhum script de rastreamento é injetado — exigência da LGPD/ANPD
+ * para cookies não essenciais.
  *
  * O consentimento é lido de localStorage ('venture-cookies' === 'ok') e
  * reage ao evento 'venture-consent' disparado pelo CookieBanner, para
@@ -73,6 +74,18 @@ export function Analytics() {
             />
           </noscript>
         </>
+      )}
+
+      {CLARITY_ID && (
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${CLARITY_ID}");
+          `}
+        </Script>
       )}
     </>
   );
