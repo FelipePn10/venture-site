@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck, IconFlame, IconTree, IconCalendar } from './Icons';
 import { maskPhoneBR } from '@/lib/phone';
+import { trackConversion } from '@/lib/track';
 
 /**
  * Diagnóstico de maturidade da operação.
@@ -181,6 +182,7 @@ export const Diagnostico = () => {
       });
       if (res.ok) {
         setState('done');
+        trackConversion('diagnostico');
       } else {
         const data = await res.json().catch(() => ({}));
         setErrorMsg(data.error || 'Não foi possível enviar. Tente novamente.');

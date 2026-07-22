@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { trackConversion } from "@/lib/track";
 import {
   IconArrow,
   IconArrowOut,
@@ -1135,6 +1136,7 @@ function NewsletterForm() {
         body: JSON.stringify({ name: "Assinante do boletim", email, source: "Boletim mensal" }),
       });
       setState(res.ok ? "ok" : "error");
+      if (res.ok) trackConversion("lead", { source: "Boletim mensal" });
     } catch {
       setState("error");
     }

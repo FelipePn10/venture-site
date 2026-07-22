@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck } from './Icons';
 import { maskPhoneBR, phoneDigits } from '@/lib/phone';
+import { trackConversion } from '@/lib/track';
 
 /**
  * Formulário de marketing do VentureERP.
@@ -135,6 +136,7 @@ export const LeadForm = ({
       });
       if (res.ok) {
         setState('ok');
+        trackConversion('lead', { source });
       } else {
         const data = await res.json().catch(() => ({}));
         setErrorMsg(data.error || 'Não foi possível enviar. Tente novamente.');

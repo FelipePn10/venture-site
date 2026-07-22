@@ -2,6 +2,7 @@
 
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
+import { trackConversion } from '@/lib/track';
 
 export const HUBSPOT_PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '51662264';
 export const HUBSPOT_MEETINGS_SLUG =
@@ -63,6 +64,7 @@ export const HubSpotMeetings = ({
   className?: string;
 }) => {
   const frame = useRef<HTMLIFrameElement>(null);
+  const booked = useRef(false);
   const [failed, setFailed] = useState(false);
 
   // src fixo e sem dependência de cookie/location: o iframe já vem no HTML do
@@ -76,7 +78,19 @@ export const HubSpotMeetings = ({
     const onMessage = (e: MessageEvent) => {
       if (!HUBSPOT_ORIGINS.includes(e.origin)) return;
       const data = (e as MessageEvent).data;
-      const height = data && typeof data === 'object' ? data.height : null;
+      if (!data || typeof data !== 'object') return;
+
+      // Reserva de demonstração concluída: dispara a conversão UMA vez.
+      // O HubSpot Meetings sinaliza o sucesso via meetingBookSucceeded.
+      const isBooking =
+        data.meetingBookSucceeded === true ||
+        data.event === 'meetingBookSucceeded';
+      if (isBooking && !booked.current) {
+        booked.current = true;
+        trackConversion('agendamento');
+      }
+
+      const height = data.height ?? null;
       if (height && frame.current) {
         frame.current.style.height = `${height}px`;
       }
