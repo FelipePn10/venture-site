@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addContact, type Contact } from '@/lib/storage';
+import { HONEYPOT_FIELD, clientIp, isRateLimited, shouldSilentlyDrop } from '@/lib/antispam';
 import nodemailer from 'nodemailer';
 
 async function sendContactNotification(contact: Contact) {
@@ -32,8 +33,18 @@ async function sendContactNotification(contact: Contact) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (isRateLimited(clientIp(req))) {
+      return NextResponse.json({ error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' }, { status: 429 });
+    }
+
     const body = await req.json();
     const { name, email, subject, message } = body;
+
+    if (shouldSilentlyDrop({ [HONEYPOT_FIELD]: body[HONEYPOT_FIELD], elapsedMs: body.elapsedMs })) {
+      console.warn(`[contact] Envio descartado (anti-bot). IP=${clientIp(req)} email=${email || '—'}`);
+      return NextResponse.json({ success: true });
+    }
+
     if (!name || !email || !message) return NextResponse.json({ error: 'Campos obrigatórios incompletos' }, { status: 400 });
 
     const contact = await addContact({ name, email, subject: subject || 'Contato geral', message });

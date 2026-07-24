@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { trackConversion } from "@/lib/track";
+import { HONEYPOT_FIELD } from "@/lib/antispam";
 import {
   IconArrow,
   IconArrowOut,
@@ -1124,6 +1125,9 @@ const footerCols: [string, [string, string][]][] = [
 function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  // Anti-bot: tempo desde a montagem e honeypot invisível.
+  const mountedAt = useRef(Date.now());
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1133,7 +1137,13 @@ function NewsletterForm() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "Assinante do boletim", email, source: "Boletim mensal" }),
+        body: JSON.stringify({
+          name: "Assinante do boletim",
+          email,
+          source: "Boletim mensal",
+          [HONEYPOT_FIELD]: honeypot,
+          elapsedMs: Date.now() - mountedAt.current,
+        }),
       });
       setState(res.ok ? "ok" : "error");
       if (res.ok) trackConversion("lead", { source: "Boletim mensal" });
@@ -1157,6 +1167,17 @@ function NewsletterForm() {
 
   return (
     <form className="flex items-center gap-2" onSubmit={handleSubmit}>
+      {/* Honeypot invisível: só bots preenchem. */}
+      <input
+        type="text"
+        name={HONEYPOT_FIELD}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}
+      />
       <input
         type="email"
         required

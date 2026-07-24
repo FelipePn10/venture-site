@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck } from './Icons';
 import { maskPhoneBR, phoneDigits } from '@/lib/phone';
+import { HONEYPOT_FIELD } from '@/lib/antispam';
 import { trackConversion } from '@/lib/track';
 
 /**
@@ -97,6 +98,11 @@ export const LeadForm = ({
   });
   const [challenges, setChallenges] = useState<string[]>([]);
 
+  // Anti-bot: momento em que o formulário montou (para medir o tempo de
+  // preenchimento) e o honeypot, um campo que humano nunca vê nem preenche.
+  const mountedAt = useRef(Date.now());
+  const [honeypot, setHoneypot] = useState('');
+
   // Guarda a origem da campanha para o lead chegar atribuído no CRM.
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -132,7 +138,14 @@ export const LeadForm = ({
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, challenges, source, utm }),
+        body: JSON.stringify({
+          ...form,
+          challenges,
+          source,
+          utm,
+          [HONEYPOT_FIELD]: honeypot,
+          elapsedMs: Date.now() - mountedAt.current,
+        }),
       });
       if (res.ok) {
         setState('ok');
@@ -180,6 +193,25 @@ export const LeadForm = ({
 
   return (
     <form onSubmit={submit} className={`rounded-[26px] border border-line bg-bg p-6 md:p-8 ${className}`}>
+      {/*
+        Honeypot: invisível e fora do fluxo de tabulação para humanos, mas
+        preenchido por bots que percorrem todos os campos. aria-hidden e
+        tabIndex removem-no de leitores de tela e do teclado.
+      */}
+      <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+        <label>
+          Não preencha este campo
+          <input
+            type="text"
+            name={HONEYPOT_FIELD}
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </label>
+      </div>
+
       <h3 className="font-serif text-3xl leading-snug text-ink">{title}</h3>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">{subtitle}</p>
 

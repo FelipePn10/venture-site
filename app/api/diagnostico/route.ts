@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addLead } from '@/lib/storage';
 import { upsertContact } from '@/lib/hubspot';
+import { HONEYPOT_FIELD, clientIp, isRateLimited, shouldSilentlyDrop } from '@/lib/antispam';
 import nodemailer from 'nodemailer';
 
 type Payload = {
@@ -11,6 +12,9 @@ type Payload = {
   segment: string;
   size: string;
   answers: Record<string, string>;
+  // Anti-bot: campo-armadilha (deve vir vazio) e tempo de preenchimento.
+  [HONEYPOT_FIELD]?: string;
+  elapsedMs?: number;
 };
 
 /** Retorna true só quando o e-mail foi realmente despachado. */
@@ -63,6 +67,18 @@ export async function POST(req: NextRequest) {
     p = (await req.json()) as Payload;
   } catch {
     return NextResponse.json({ error: 'Requisição inválida' }, { status: 400 });
+  }
+
+  if (isRateLimited(clientIp(req))) {
+    return NextResponse.json(
+      { error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' },
+      { status: 429 },
+    );
+  }
+
+  if (shouldSilentlyDrop(p)) {
+    console.warn(`[diagnostico] Envio descartado (anti-bot). IP=${clientIp(req)} email=${p.email || '—'}`);
+    return NextResponse.json({ success: true });
   }
 
   if (!p.name || !p.email) {

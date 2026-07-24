@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addSchedule, getSchedules, isSlotTaken, type Schedule } from '@/lib/storage';
+import { HONEYPOT_FIELD, clientIp, isRateLimited, shouldSilentlyDrop } from '@/lib/antispam';
 import nodemailer from 'nodemailer';
 
 function transporter() {
@@ -76,8 +77,17 @@ async function notify(s: Schedule) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (isRateLimited(clientIp(req))) {
+      return NextResponse.json({ error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' }, { status: 429 });
+    }
+
     const body = await req.json();
     const { name, email, company, phone, segment, size, current, date, time, notes } = body;
+
+    if (shouldSilentlyDrop({ [HONEYPOT_FIELD]: body[HONEYPOT_FIELD], elapsedMs: body.elapsedMs })) {
+      console.warn(`[schedule] Envio descartado (anti-bot). IP=${clientIp(req)} email=${email || '—'}`);
+      return NextResponse.json({ success: true });
+    }
 
     if (!name || !email || !date || !time) {
       return NextResponse.json({ error: 'Nome, e-mail, data e horário são obrigatórios' }, { status: 400 });

@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck, IconFlame, IconTree, IconCalendar } from './Icons';
 import { maskPhoneBR } from '@/lib/phone';
+import { HONEYPOT_FIELD } from '@/lib/antispam';
 import { trackConversion } from '@/lib/track';
 
 /**
@@ -119,6 +120,9 @@ export const Diagnostico = () => {
   const [chosen, setChosen] = useState<Record<string, number>>({});
   const [state, setState] = useState<State>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  // Anti-bot: tempo desde a montagem e honeypot invisível.
+  const mountedAt = useRef(Date.now());
+  const [honeypot, setHoneypot] = useState('');
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -178,7 +182,12 @@ export const Diagnostico = () => {
       const res = await fetch('/api/diagnostico', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, answers: labelled }),
+        body: JSON.stringify({
+          ...form,
+          answers: labelled,
+          [HONEYPOT_FIELD]: honeypot,
+          elapsedMs: Date.now() - mountedAt.current,
+        }),
       });
       if (res.ok) {
         setState('done');
@@ -321,6 +330,21 @@ export const Diagnostico = () => {
 
       {isFormStep && (
         <form className="mt-7" onSubmit={submit}>
+          {/* Honeypot invisível: só bots preenchem. */}
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+            <label>
+              Não preencha este campo
+              <input
+                type="text"
+                name={HONEYPOT_FIELD}
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </label>
+          </div>
+
           <p className="font-serif text-[27px] leading-snug text-ink">
             Para onde enviamos seu diagnóstico?
           </p>

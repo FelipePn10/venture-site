@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addLead } from '@/lib/storage';
 import { upsertContact } from '@/lib/hubspot';
+import { HONEYPOT_FIELD, clientIp, isRateLimited, shouldSilentlyDrop } from '@/lib/antispam';
 import nodemailer from 'nodemailer';
 
 type Payload = {
@@ -18,6 +19,9 @@ type Payload = {
   consent?: boolean;
   source?: string;
   utm?: Record<string, string>;
+  // Anti-bot: campo-armadilha (deve vir vazio) e tempo de preenchimento.
+  [HONEYPOT_FIELD]?: string;
+  elapsedMs?: number;
 };
 
 const row = (k: string, v: string) =>
@@ -77,6 +81,21 @@ export async function POST(req: NextRequest) {
     p = (await req.json()) as Payload;
   } catch {
     return NextResponse.json({ error: 'Requisição inválida' }, { status: 400 });
+  }
+
+  // Flood do mesmo IP → barra antes de qualquer processamento.
+  if (isRateLimited(clientIp(req))) {
+    return NextResponse.json(
+      { error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' },
+      { status: 429 },
+    );
+  }
+
+  // Honeypot preenchido ou envio rápido demais → bot. Respondemos "sucesso"
+  // para não ensinar o bot a se adaptar, mas nada é gravado nem notificado.
+  if (shouldSilentlyDrop(p)) {
+    console.warn(`[lead] Envio descartado (anti-bot). IP=${clientIp(req)} email=${p.email || '—'}`);
+    return NextResponse.json({ success: true });
   }
 
   if (!p.name || !p.email) {
