@@ -5,6 +5,7 @@ import { Logo } from '@/components/Logo';
 import { IconCheck } from '@/components/Icons';
 import { BreadcrumbJsonLd } from '@/components/BreadcrumbJsonLd';
 import { SITE_URL } from '@/lib/site';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 type Module = {
   title: string;
@@ -136,9 +137,11 @@ export default function ModulePage({ params }: { params: { slug: string } }) {
           <Link href="/agendar" className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm text-bg hover:bg-moss-900">
             Agendar demonstração →
           </Link>
-          <Link href="/demo" className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 text-sm hover:border-ink/50">
-            Ver funcionando
-          </Link>
+          {DEMO_VIDEOS_ENABLED && (
+            <Link href="/demo" className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 text-sm hover:border-ink/50">
+              Ver funcionando
+            </Link>
+          )}
         </div>
 
         <section className="mt-20 grid gap-12 md:grid-cols-2">

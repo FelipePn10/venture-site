@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Logo } from './Logo';
 import { IconArrow } from './Icons';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 const links: [string, string][] = [
   ['Módulos', '/#modulos'],
@@ -11,7 +12,8 @@ const links: [string, string][] = [
   ['Metalúrgicas', '/metalurgicas'],
   ['Moveleiras', '/moveleiras'],
   ['Diagnóstico', '/diagnostico'],
-  ['Demo', '/demo'],
+  // Volta ao menu quando a demonstração gravada for publicada.
+  ...(DEMO_VIDEOS_ENABLED ? ([['Demo', '/demo']] as [string, string][]) : []),
 ];
 
 export const Nav = () => {

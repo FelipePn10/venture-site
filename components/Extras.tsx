@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconBolt, IconLeaf } from './Icons';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 export const useReveal = () => {
   useEffect(() => {
@@ -85,13 +86,15 @@ export const FloatingCTA = () => {
         vis ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
       }`}
     >
-      <a
-        href="/demo"
-        className="flex items-center gap-2 rounded-full border border-moss-700 bg-bg px-4 py-2.5 text-sm text-moss-700 shadow-[0_8px_24px_-8px_rgba(20,32,26,.3)] transition hover:bg-moss-50"
-      >
-        Ver demo
-        <IconArrow size={13} />
-      </a>
+      {DEMO_VIDEOS_ENABLED && (
+        <a
+          href="/demo"
+          className="flex items-center gap-2 rounded-full border border-moss-700 bg-bg px-4 py-2.5 text-sm text-moss-700 shadow-[0_8px_24px_-8px_rgba(20,32,26,.3)] transition hover:bg-moss-50"
+        >
+          Ver demo
+          <IconArrow size={13} />
+        </a>
+      )}
       <a
         href="/agendar"
         className="flex items-center gap-2.5 rounded-full border border-moss-800 bg-moss-900 px-4 py-2.5 text-sm text-bg shadow-[0_20px_40px_-15px_rgba(20,32,26,.5)] transition hover:bg-moss-800"

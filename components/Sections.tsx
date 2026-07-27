@@ -36,6 +36,8 @@ import {
 import { Counter } from "./Extras";
 import { LeadForm } from "./LeadForm";
 import { legal } from "@/lib/legal";
+import { LogoMark } from "./Logo";
+import { DEMO_VIDEOS_ENABLED } from "@/lib/flags";
 
 export const Trust = () => {
   const creds = [
@@ -78,59 +80,134 @@ export const Trust = () => {
 export const SectorPicker = () => {
   const sectors = [
     {
+      n: "01",
       href: "/metalurgicas",
       label: "Metalúrgica",
       Icon: IconFlame,
-      d: "Corte, dobra, solda, usinagem e pintura com custo real por operação — e o Bloco K saindo sozinho da produção apontada.",
+      title: "Do orçamento à nota fiscal, o pedido inteiro em um sistema.",
+      d: "O mesmo pedido atravessa comercial, engenharia, suprimentos, chão de fábrica e fiscal — com custo, prazo e estoque atualizados a cada etapa.",
+      feats: [
+        "Orçamento e pedido de venda saindo da ficha técnica da peça",
+        "Roteiro com tempo e custo de cada operação — corte, dobra, usinagem, solda, acabamento",
+        "Compras e estoque puxados pela necessidade real da produção",
+        "Apontamento de chão de fábrica alimentando prazo e custo em tempo real",
+        "Bloco K, SPED e custo por peça gerados do que foi produzido",
+      ],
+      /** Só a metalúrgica tem cliente para citar — ver marketing-claims-policy. */
+      proof: {
+        k: "cliente em produção",
+        v: "Tecnofer · metalúrgica de 50 colaboradores, do orçamento ao Bloco K.",
+      },
     },
     {
+      n: "02",
       href: "/moveleiras",
       label: "Moveleira",
       Icon: IconTree,
-      d: "Projeto sob medida precificado com MDF, ferragens e fitas de borda, plano de corte que aproveita a placa e romaneio conferido.",
+      title: "Do projeto vendido ao ambiente entregue, sem trocar de sistema.",
+      d: "Venda, projeto, lista de materiais, corte, produção e expedição no mesmo pedido — cada ambiente com custo e prazo próprios, do jeito que o cliente comprou.",
+      feats: [
+        "Orçamento e pedido de venda por ambiente, com o projeto anexado",
+        "Ficha técnica completa: MDF, ferragens, fitas de borda e acessórios",
+        "Plano de corte calculado por algoritmo, buscando o melhor aproveitamento de cada placa",
+        "Produção acompanhada ambiente a ambiente, do corte à montagem",
+        "Romaneio, expedição e fiscal fechando o mesmo pedido",
+      ],
+      proof: {
+        k: "onde está o ganho",
+        v: "O aproveitamento da placa é calculado por algoritmo a cada pedido — o mesmo trabalho que hoje é ajustado à mão, feito com mais combinações e menos sobra.",
+      },
     },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-4 pt-16 lg:px-10">
-      <div className="reveal text-center">
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
-          ·· comece por aqui
-        </span>
-        <h2 className="mt-3 font-serif text-4xl leading-[1.05] tracking-tight text-ink md:text-5xl">
-          O que a sua fábrica produz?
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-muted">
-          Cada setor tem material, processo e regra fiscal próprios. Escolha o
-          seu e veja o sistema no seu vocabulário.
+    <section className="mx-auto max-w-7xl px-6 pb-4 pt-20 lg:px-10">
+      <div className="reveal grid items-end gap-6 md:grid-cols-[1.15fr_1fr]">
+        <div>
+          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
+            ·· comece por aqui
+          </span>
+          <h2 className="mt-3 font-serif text-4xl leading-[1.05] tracking-tight text-ink md:text-5xl">
+            O mesmo sistema completo,{" "}
+            <span className="italic text-moss-700">no processo de quem fabrica como você.</span>
+          </h2>
+        </div>
+        <p className="text-[16px] leading-relaxed text-muted md:pl-8">
+          Comercial, engenharia, suprimentos, produção, expedição e fiscal — os
+          módulos são os mesmos para as duas indústrias. O que muda é o material,
+          o roteiro de fabricação e a obrigação fiscal de cada uma. Escolha o seu
+          setor e veja o VentureERP já configurado para ele.
         </p>
       </div>
 
-      <div className="reveal mt-10 grid gap-6 md:grid-cols-2" data-delay="1">
-        {sectors.map(({ href, label, Icon, d }) => (
+      <div className="reveal mt-12 grid gap-6 md:grid-cols-2" data-delay="1">
+        {sectors.map(({ n, href, label, Icon, title, d, feats, proof }) => (
           <Link
             key={href}
             href={href}
-            className="group flex flex-col rounded-2xl border border-line bg-bg p-8 transition hover:border-moss-700 hover:shadow-sm"
+            className="group flex flex-col rounded-2xl border border-line bg-paper p-8 transition hover:border-moss-700 hover:shadow-[0_1px_0_0_rgba(50,69,18,0.08),0_18px_40px_-28px_rgba(20,32,26,0.45)] md:p-9"
           >
-            <span className="grid h-14 w-14 place-items-center rounded-2xl bg-moss-50 text-moss-700 transition group-hover:bg-moss-100">
-              <Icon size={26} />
-            </span>
-            <p className="mt-6 font-serif text-3xl leading-tight text-ink">
-              {label}
+            <div className="flex items-center gap-3 border-b border-line pb-5">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-moss-50 text-moss-700 transition group-hover:bg-moss-100">
+                <Icon size={22} />
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70">
+                {label}
+              </span>
+              <span className="ml-auto font-mono text-[11px] tracking-[0.14em] text-muted/60">
+                {n}
+              </span>
+            </div>
+
+            <p className="mt-6 font-serif text-[28px] leading-[1.12] tracking-tight text-ink md:text-[32px]">
+              {title}
             </p>
-            <p className="mt-3 flex-1 text-[15px] leading-relaxed text-muted">
-              {d}
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-[15px] text-moss-700">
-              Ver a solução para {label.toLowerCase()}s
-              <IconArrow
-                size={16}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </span>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted">{d}</p>
+
+            <ul className="mt-6 space-y-2.5">
+              {feats.map((f) => (
+                <li
+                  key={f}
+                  className="flex items-start gap-2.5 text-[14.5px] leading-snug text-ink/85"
+                >
+                  <IconCheck size={16} className="mt-0.5 shrink-0 text-moss-700" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-auto pt-7">
+              <div className="rounded-xl border border-line bg-bg px-4 py-3.5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                  {proof.k}
+                </p>
+                <p className="mt-1.5 text-[13.5px] leading-snug text-ink/80">
+                  {proof.v}
+                </p>
+              </div>
+
+              <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-moss-700 px-5 py-3 text-[15px] text-bg transition group-hover:bg-moss-800">
+                Ver a solução para {label.toLowerCase()}s
+                <IconArrow
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </span>
+            </div>
           </Link>
         ))}
       </div>
+
+      <p className="reveal mt-7 text-center text-[14px] leading-relaxed text-muted" data-delay="2">
+        Sua fábrica não é nenhuma das duas?{" "}
+        <Link
+          href="/diagnostico"
+          className="inline-flex items-center gap-1.5 text-moss-700 underline decoration-moss-200 underline-offset-4 transition hover:decoration-moss-700"
+        >
+          Conte o seu processo no diagnóstico gratuito
+          <IconArrow size={14} />
+        </Link>{" "}
+        e a gente diz o que muda no seu caso.
+      </p>
     </section>
   );
 };
@@ -628,7 +705,12 @@ export const Band = () => (
   </section>
 );
 
-export const DemoBand = () => (
+/**
+ * Faixa da demonstração gravada. Fica atrás da flag DEMO_VIDEOS_ENABLED — sem
+ * vídeo gravado ela não deve aparecer em nenhuma página.
+ */
+export const DemoBand = () =>
+  !DEMO_VIDEOS_ENABLED ? null : (
   <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
     <div className="grid items-center gap-10 rounded-[28px] border border-line bg-paper p-8 md:grid-cols-[1.1fr_1fr] md:p-14">
       <div className="reveal">
@@ -1114,7 +1196,10 @@ const footerCols: [string, [string, string][]][] = [
     "Recursos",
     [
       ["Agendar demonstração", "/agendar"],
-      ["Ver demonstração", "/demo"],
+      // Volta ao rodapé quando a demonstração gravada for publicada.
+      ...(DEMO_VIDEOS_ENABLED
+        ? ([["Ver demonstração", "/demo"]] as [string, string][])
+        : []),
       ["Módulos", "/#modulos"],
       ["Status do sistema", "/status"],
       ["Contato", "/#contato"],
@@ -1204,17 +1289,7 @@ export const Footer = () => (
       <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Link href="/" className="flex items-center gap-2.5">
-            <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-              <path
-                d="M4 5 L15 24 L26 5"
-                fill="none"
-                stroke="#14201A"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <circle cx="15" cy="6" r="2.6" fill="#CBAB1F" />
-            </svg>
+            <LogoMark size={30} />
             <span className="font-serif text-2xl tracking-tight text-ink">
               Venture<span style={{ color: "#CBAB1F" }}>ERP</span>
             </span>

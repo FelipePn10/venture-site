@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Sections';
 import { IconArrow, IconCheck, IconClock, IconUsers, IconRuler, IconLayers, IconGear, IconChartLine, IconBox, IconReceipt } from '@/components/Icons';
@@ -129,6 +131,10 @@ function VideoCard({ video }: { video: VideoItem }) {
 
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState(0);
+
+  // Sem vídeos gravados, a página não vai ao ar: responde 404 em vez de exibir
+  // placeholders. Ligue DEMO_VIDEOS_ENABLED em lib/flags.ts para publicá-la.
+  if (!DEMO_VIDEOS_ENABLED) notFound();
 
   return (
     <>

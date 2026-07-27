@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { SITE } from "@/lib/site";
+import { MARK_COLORS, MARK_PATHS } from "@/lib/brand";
 
 /**
  * Imagem social (1200×630) gerada na marca VentureERP. É o que aparece ao
@@ -32,16 +33,11 @@ export default function OGImage() {
       >
         {/* Marca */}
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <svg width="52" height="52" viewBox="0 0 30 30">
-            <path
-              d="M4 5 L15 24 L26 5"
-              fill="none"
-              stroke={INK}
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle cx="15" cy="6" r="2.6" fill={GOLD} />
+          <svg width="52" height="52" viewBox="0 0 512 512">
+            <path d={MARK_PATHS.light} fill={MARK_COLORS.dark.light} />
+            <path d={MARK_PATHS.mid} fill={MARK_COLORS.dark.mid} />
+            <path d={MARK_PATHS.deep} fill={MARK_COLORS.dark.deep} />
+            <path d={MARK_PATHS.darkest} fill={MARK_COLORS.dark.darkest} />
           </svg>
           <div style={{ display: "flex", fontSize: 40, fontWeight: 600, color: INK }}>
             Venture<span style={{ color: GOLD }}>ERP</span>

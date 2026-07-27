@@ -6,6 +6,7 @@ import { IconArrow, IconCheck, IconFlame, IconTree, IconCalendar } from './Icons
 import { maskPhoneBR } from '@/lib/phone';
 import { HONEYPOT_FIELD } from '@/lib/antispam';
 import { trackConversion } from '@/lib/track';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 /**
  * Diagnóstico de maturidade da operação.
@@ -246,12 +247,14 @@ export const Diagnostico = () => {
           >
             Agendar demonstração de 30 min <IconArrow size={16} />
           </Link>
-          <Link
-            href="/demo"
-            className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3.5 text-sm text-ink transition hover:border-ink/50"
-          >
-            Ver a demonstração no meu ritmo
-          </Link>
+          {DEMO_VIDEOS_ENABLED && (
+            <Link
+              href="/demo"
+              className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3.5 text-sm text-ink transition hover:border-ink/50"
+            >
+              Ver a demonstração no meu ritmo
+            </Link>
+          )}
         </div>
         <p className="mt-4 text-[13px] text-muted">
           Recebemos suas respostas e vamos retomar o contato por{' '}

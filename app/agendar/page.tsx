@@ -4,6 +4,7 @@ import { Footer } from '@/components/Sections';
 import { HubSpotMeetings } from '@/components/HubSpot';
 import { LeadForm } from '@/components/LeadForm';
 import { IconCheck, IconClock, IconUsers, IconGear, IconArrow, IconQuote } from '@/components/Icons';
+import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 export const metadata = {
   title: 'Agendar demonstração · VentureERP para Metalúrgicas e Moveleiras',
@@ -136,17 +137,19 @@ export default function AgendarPage() {
                 </figcaption>
               </figure>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-paper px-5 py-4">
-                <p className="text-[14px] text-ink">
-                  Ainda não quer falar com ninguém?
-                </p>
-                <Link
-                  href="/demo"
-                  className="inline-flex items-center gap-2 text-[14px] text-moss-700 underline-offset-2 hover:underline"
-                >
-                  Ver a demonstração gravada <IconArrow size={14} />
-                </Link>
-              </div>
+              {DEMO_VIDEOS_ENABLED && (
+                <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-paper px-5 py-4">
+                  <p className="text-[14px] text-ink">
+                    Ainda não quer falar com ninguém?
+                  </p>
+                  <Link
+                    href="/demo"
+                    className="inline-flex items-center gap-2 text-[14px] text-moss-700 underline-offset-2 hover:underline"
+                  >
+                    Ver a demonstração gravada <IconArrow size={14} />
+                  </Link>
+                </div>
+              )}
             </div>
 
             <LeadForm
