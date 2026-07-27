@@ -4,6 +4,7 @@ import {
   Trust, SectorPicker, Problem, Modules, Testimonials, Workflow, Compliance, CTA, ContactSection, Footer
 } from '@/components/Sections';
 import { Verticals } from '@/components/Verticals';
+import { CuttingPlan } from '@/components/CuttingPlan';
 import { FAQ } from '@/components/FAQ';
 import { FloatingCTA, CookieBanner, RevealRoot } from '@/components/Extras';
 
@@ -23,6 +24,7 @@ export default function Home() {
         <SectorPicker />
         <Problem />
         <Modules />
+        <CuttingPlan />
         <Verticals />
         <Testimonials />
         <Workflow />

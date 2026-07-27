@@ -70,3 +70,15 @@ create index if not exists schedules_date_idx on public.schedules (date);
 alter table public.leads     enable row level security;
 alter table public.contacts  enable row level security;
 alter table public.schedules enable row level security;
+
+-- ----------------------------------------------------
+-- Storage: planos de corte enviados pelo "Desafio do plano de corte".
+--
+-- Bucket PRIVADO (public = false). Sem policy para a chave anon/publishable,
+-- então nem o front nem um link direto conseguem ler o arquivo: o servidor
+-- grava com a service_role e gera URL assinada e temporária só para o e-mail
+-- de notificação do time. São arquivos de terceiros — tratar como confidencial.
+-- ----------------------------------------------------
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('desafio-cortes', 'desafio-cortes', false, 15728640)
+on conflict (id) do nothing;

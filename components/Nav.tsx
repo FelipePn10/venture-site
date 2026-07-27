@@ -7,6 +7,7 @@ import { IconArrow } from './Icons';
 
 const links: [string, string][] = [
   ['Módulos', '/#modulos'],
+  ['Plano de corte', '/plano-de-corte'],
   ['Metalúrgicas', '/metalurgicas'],
   ['Moveleiras', '/moveleiras'],
   ['Diagnóstico', '/diagnostico'],

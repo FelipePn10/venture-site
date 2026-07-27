@@ -42,6 +42,7 @@ export const SITE = {
  */
 export const STATIC_ROUTES = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
+  { path: "/plano-de-corte", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/metalurgicas", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/moveleiras", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/diagnostico", priority: 0.8, changeFrequency: "monthly" as const },

@@ -44,6 +44,32 @@ body { background: #FAF8EC; color: #14201A; -webkit-font-smoothing: antialiased;
           mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
+/* --- Plano de corte: entrada das peças no mapa + varredura da serra --- */
+@keyframes piece-in {
+  from { opacity: 0; transform: scale(.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.piece-in {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: piece-in .55s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+@keyframes cut-scan {
+  0%   { left: -2%;  opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 102%; opacity: 0; }
+}
+.cut-scan { animation: cut-scan 2.6s cubic-bezier(.4,0,.5,1) forwards; }
+
+@keyframes bar-fill { from { width: 0; } }
+.bar-fill { animation: bar-fill 1.4s cubic-bezier(.2,.8,.2,1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
+  /* sem animação, os elementos precisam nascer visíveis */
+  .piece-in { opacity: 1; }
+  .cut-scan { display: none; }
 }
