@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * FORA DA HOME desde 28/07/2026.
+ *
+ * Esta seção ("para o seu setor") repetia o SectorPicker quase inteira: mesmos
+ * dois setores, mesmos links, mesma lista de recursos, algumas telas abaixo. O
+ * lugar dela na home passou a ser a seção Diferenciais, e o âncora #setores
+ * migrou para o SectorPicker. O arquivo fica aqui porque o painel de prova por
+ * setor (case da Tecnofer / capabilities da moveleira) pode ser reaproveitado.
+ */
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { IconArrow, IconCheck, IconFlame, IconTree } from './Icons';

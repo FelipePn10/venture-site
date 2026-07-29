@@ -12,7 +12,7 @@ const metrics: { n: string; l: string }[] = [
 const before: [string, string][] = [
   ['Antes', 'Planilhas soltas e sistemas legados que não conversavam entre si.'],
   ['Antes', 'Ordens de produção dependiam de retrabalho manual a cada etapa.'],
-  ['Antes', 'Matéria-prima se perdia sem ninguém medir quanta chapa virava sobra.'],
+  ['Antes', 'Não havia medição de quanta chapa virava sobra a cada plano de corte.'],
 ];
 
 const after: [string, string][] = [

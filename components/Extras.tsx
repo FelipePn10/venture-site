@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { IconArrow, IconBolt, IconLeaf } from './Icons';
+import { IconArrow, IconBolt, IconLayers, IconLeaf } from './Icons';
 import { DEMO_VIDEOS_ENABLED } from '@/lib/flags';
 
 export const useReveal = () => {
@@ -95,6 +95,18 @@ export const FloatingCTA = () => {
           <IconArrow size={13} />
         </a>
       )}
+      {/*
+        A bifurcação por setor mora no topo da home. Quem rolou até aqui já
+        passou por ela sem se identificar — este atalho traz o visitante de
+        volta para "comece por aqui" em vez de fazê-lo caçar o menu.
+      */}
+      <a
+        href="#setores"
+        className="flex items-center gap-2 rounded-full border border-moss-700 bg-bg px-4 py-2.5 text-sm text-moss-700 shadow-[0_8px_24px_-8px_rgba(20,32,26,.3)] transition hover:bg-moss-50"
+      >
+        Setores
+        <IconLayers size={14} />
+      </a>
       <a
         href="/agendar"
         className="flex items-center gap-2.5 rounded-full border border-moss-800 bg-moss-900 px-4 py-2.5 text-sm text-bg shadow-[0_20px_40px_-15px_rgba(20,32,26,.5)] transition hover:bg-moss-800"

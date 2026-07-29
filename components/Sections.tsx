@@ -76,6 +76,10 @@ export const Trust = () => {
  * As páginas de setor concentram o conteúdo mais persuasivo do site, mas antes
  * só eram alcançáveis pelo menu do topo — quem rolava a página direto nunca
  * chegava nelas. Aqui o visitante se autoidentifica no primeiro scroll.
+ *
+ * Herdou o âncora #setores da antiga seção Verticals, que dizia a mesma coisa
+ * mais abaixo e saiu da home. Quem já rolou para longe volta para cá pelo botão
+ * "Setores" do FloatingCTA.
  */
 export const SectorPicker = () => {
   const sectors = [
@@ -120,7 +124,7 @@ export const SectorPicker = () => {
     },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-4 pt-20 lg:px-10">
+    <section id="setores" className="mx-auto max-w-7xl scroll-mt-24 px-6 pb-4 pt-20 lg:px-10">
       <div className="reveal grid items-end gap-6 md:grid-cols-[1.15fr_1fr]">
         <div>
           <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss-700">
@@ -217,16 +221,16 @@ export const Problem = () => {
     {
       Icon: IconChartLine,
       t: "O preço sai da experiência, não da conta",
-      d: "Cada peça sob medida é orçada na planilha, no tempo que alguém acha que leva. Material, hora de máquina e mão de obra ficam de fora — e só no fim do mês você descobre se aquele pedido deu lucro ou pagou para produzir.",
+      d: "Cada peça sob medida é orçada na planilha, com o tempo estimado a partir da peça parecida que a fábrica já fez. Material, hora de máquina e mão de obra ficam de fora — e só no fim do mês você descobre se aquele pedido deu lucro ou pagou para produzir.",
     },
     {
       Icon: IconLayers,
       t: "Sobra de chapa e MDF",
-      d: "Cada plano de corte feito no olho deixa retalho que vira lixo. No fim do ano, é caminhão de dinheiro indo pra caçamba.",
+      d: "Cada plano de corte montado sem otimização deixa retalho que não serve para a próxima peça. Somando o ano inteiro, é matéria-prima comprada, paga e nunca faturada.",
     },
     {
       Icon: IconGear,
-      t: "Prazo vira adivinhação",
+      t: "O andamento do pedido não fica registrado",
       d: "Você sabe que o pedido está na fábrica. Mas ele passa por corte, dobra, solda e pintura — e dizer em qual dessas etapas ele está agora, e quanto falta para terminar, depende de alguém ir até lá perguntar.",
     },
     {
@@ -282,8 +286,7 @@ export const Problem = () => {
 
       <div className="reveal mt-10 flex flex-wrap items-center justify-between gap-5 rounded-2xl border border-moss-200 bg-moss-50 px-7 py-6">
         <p className="max-w-xl font-serif text-2xl leading-snug text-ink">
-          E se cada uma dessas dores tivesse o número exato — e a solução — na sua
-          frente?
+          E se cada uma dessas dores tivesse a solução exata para a sua indústria?
         </p>
         <Link
           href="/agendar"
@@ -382,7 +385,7 @@ export const Modules = () => {
       slug: "corte",
       Icon: IconLayers,
       title: "Plano de Corte & Aproveitamento",
-      body: "Nesting automático de chapa de aço e MDF que reduz a sobra. Veja o aproveitamento de cada placa antes de cortar e pare de jogar dinheiro na caçamba.",
+      body: "Nesting automático de chapa de aço e MDF que reduz a sobra. Veja o aproveitamento de cada placa antes de cortar — e o que sobra volta identificado para a prateleira em vez de virar sucata.",
       tags: ["Nesting", "Chapa & MDF", "Menos sobra"],
       Mini: MiniInventory,
     },
@@ -488,8 +491,8 @@ export const Modules = () => {
 
 export const Compare = () => {
   const rows: [string, string, string, string][] = [
-    ["Orçamento de peça sob medida", "Minutos, com ficha técnica real", "Horas no Excel, no chute", "Não calcula processo"],
-    ["Sobra de chapa e MDF", "Plano de corte otimizado", "No olho do operador", "Não tem nesting"],
+    ["Orçamento de peça sob medida", "Minutos, com ficha técnica real", "Horas no Excel, sem custo de processo", "Não calcula processo"],
+    ["Sobra de chapa e MDF", "Plano de corte otimizado", "Depende da experiência do operador", "Não tem nesting"],
     ["Custo real por peça", "Em tempo real, por ordem", "Estimado no fim do mês", "Rateio genérico"],
     ["Ordem de produção", "Apontada no chão de fábrica", "Quadro branco e papel", "Módulo caro à parte"],
     ["Bloco K e SPED", "Gerados automaticamente", "Risco de multa", "Depende de consultoria"],
@@ -1201,6 +1204,7 @@ const footerCols: [string, [string, string][]][] = [
         ? ([["Ver demonstração", "/demo"]] as [string, string][])
         : []),
       ["Módulos", "/#modulos"],
+      ["Documentação", "https://help.venturerp.com"],
       ["Status do sistema", "/status"],
       ["Contato", "/#contato"],
     ],
@@ -1319,9 +1323,22 @@ export const Footer = () => (
             <ul className="mt-4 space-y-2.5 text-[14px] text-ink/85">
               {ls.map(([l, h]) => (
                 <li key={l}>
-                  <Link href={h} className="transition hover:text-moss-700">
-                    {l}
-                  </Link>
+                  {/* A documentação vive fora do site (help.venturerp.com). */}
+                  {h.startsWith("http") ? (
+                    <a
+                      href={h}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 transition hover:text-moss-700"
+                    >
+                      {l}
+                      <IconArrowOut size={12} className="text-muted" />
+                    </a>
+                  ) : (
+                    <Link href={h} className="transition hover:text-moss-700">
+                      {l}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

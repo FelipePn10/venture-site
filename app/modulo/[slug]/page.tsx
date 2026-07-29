@@ -25,7 +25,7 @@ const modules: Record<string, Module> = {
   },
   corte: {
     title: 'Plano de Corte & Aproveitamento.',
-    body: 'Nesting automático de chapa de aço e MDF que reduz a sobra. Veja o aproveitamento de cada placa antes de cortar e pare de jogar matéria-prima na caçamba.',
+    body: 'Nesting automático de chapa de aço e MDF que reduz a sobra. Veja o aproveitamento de cada placa antes de cortar — e o que sobra volta identificado para a prateleira em vez de virar sucata.',
     feats: ['Nesting automático de chapa e MDF', 'Aproveitamento por plano de corte', 'Cálculo de fita de borda e ferragens', 'Controle de retalho aproveitável', 'Otimização por espessura e cor', 'Geração de etiqueta de peça', 'Exportação para máquina de corte'],
     conn: ['Engenharia → consumo da ficha técnica', 'Estoque → baixa de chapa e retorno de retalho', 'PCP → corte vira etapa da OP', 'Custos → matéria-prima real por peça'],
     kpis: [['Menos sobra', 'de MDF e chapa'], ['+ peças', 'na mesma matéria-prima', ], ['Antes de cortar', 'você vê o aproveitamento']]

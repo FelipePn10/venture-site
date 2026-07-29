@@ -45,13 +45,13 @@ const QUESTIONS: Question[] = [
     area: 'Aproveitamento de material',
     question: 'Como é definido o plano de corte de chapa ou MDF?',
     options: [
-      { label: 'No olho, direto na máquina', weight: 2 },
+      { label: 'Direto na máquina, pela experiência do operador', weight: 2 },
       { label: 'Planilha ou desenho feito à mão', weight: 2 },
       { label: 'Software separado, sem ligação com o estoque', weight: 1 },
       { label: 'Nesting integrado à ficha técnica e ao estoque', weight: 0 },
     ],
     finding:
-      'Sem nesting integrado, a sobra de material vira retalho que ninguém reaproveita. É onde a matéria-prima mais cara costuma escapar sem aparecer em nenhum relatório.',
+      'Sem nesting integrado, a sobra vira retalho sem medida nem localização registrada — e por isso não volta para o próximo corte. É onde a matéria-prima mais cara costuma escapar sem aparecer em nenhum relatório.',
   },
   {
     id: 'pcp',
@@ -77,7 +77,7 @@ const QUESTIONS: Question[] = [
       { label: 'Sim, custo e margem por OP no sistema', weight: 0 },
     ],
     finding:
-      'Sem margem por OP, não dá para saber qual produto sustenta a fábrica e qual drena caixa. Decisão de mix e de preço vira aposta.',
+      'Sem margem por OP, não dá para saber qual produto sustenta a fábrica e qual drena caixa. Decisão de mix e de preço fica sem base numérica, e a diferença só aparece no fechamento.',
   },
   {
     id: 'fiscal',
@@ -155,7 +155,7 @@ export const Diagnostico = () => {
     score >= 9
       ? {
           label: 'Operação apoiada em processo manual',
-          body: 'A maior parte das decisões depende de planilha, papel ou da memória de alguém. É o cenário em que um ERP industrial costuma mudar mais coisa — e também o que exige mais cuidado na implantação.',
+          body: 'A maior parte das decisões depende de planilha, papel e do conhecimento de quem está na operação — que funciona, mas não fica registrado em lugar nenhum. É o cenário em que um ERP industrial costuma mudar mais coisa — e também o que exige mais cuidado na implantação.',
         }
       : score >= 5
         ? {

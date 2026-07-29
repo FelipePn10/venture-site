@@ -3,7 +3,7 @@ import { Hero } from '@/components/Hero';
 import {
   Trust, SectorPicker, Problem, Modules, Testimonials, Workflow, Compliance, CTA, ContactSection, Footer
 } from '@/components/Sections';
-import { Verticals } from '@/components/Verticals';
+import { Diferenciais } from '@/components/Diferenciais';
 import { CuttingPlan } from '@/components/CuttingPlan';
 import { FAQ } from '@/components/FAQ';
 import { FloatingCTA, CookieBanner, RevealRoot } from '@/components/Extras';
@@ -25,7 +25,7 @@ export default function Home() {
         <Problem />
         <Modules />
         <CuttingPlan />
-        <Verticals />
+        <Diferenciais />
         <Testimonials />
         <Workflow />
         <Compliance />

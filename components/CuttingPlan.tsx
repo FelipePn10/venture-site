@@ -546,7 +546,7 @@ const diffs = [
   {
     Icon: IconBox,
     title: 'Sobra com nome e sobrenome',
-    body: 'Cada retalho vira uma peça de estoque de verdade: com etiqueta, medida, lote de origem, certificado e custo. No próximo pedido, ele aparece na lista antes da chapa nova.',
+    body: 'Cada retalho volta ao estoque como item próprio: com etiqueta, medida, lote de origem, certificado e custo. No próximo pedido, ele aparece na lista antes da chapa nova.',
   },
   {
     Icon: IconLayers,

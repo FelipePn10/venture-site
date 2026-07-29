@@ -57,8 +57,13 @@ export const Hero = () => (
           </Link>
         </div>
 
+        {/*
+          Não existe "sem licença por usuário": a licença é por usuário e o
+          valor acompanha o porte da fábrica. A prova social aqui é a proposta
+          dimensionada, não um modelo de cobrança que não praticamos.
+        */}
         <p className="mt-4 text-[13px] leading-relaxed text-muted">
-          Sem licença por usuário · migração inclusa · suporte de quem entende de produção.
+          Proposta no tamanho da sua fábrica · migração inclusa · suporte de quem entende de produção.
         </p>
 
         <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-6">

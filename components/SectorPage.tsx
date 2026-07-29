@@ -46,16 +46,16 @@ export const metalurgicas: Sector = {
     'Da chapa que entra no galpão à estrutura que sai na carreta. Orçamento com custo real de corte, dobra, solda e pintura, plano de corte que reduz a sobra e Bloco K gerado sozinho — tudo puxado da mesma ficha técnica.',
   pains: [
     {
-      t: 'O orçamento é um chute com margem de segurança',
+      t: 'A margem de segurança cobre o que a conta não sabe',
       d: 'Sem tempo de máquina e consumo real de chapa na conta, ou você perde o pedido no preço ou descobre no fim do mês que produziu no prejuízo.',
     },
     {
       t: 'A sobra de chapa vira caçamba',
-      d: 'Corte planejado no olho deixa retalho grande demais para descartar e pequeno demais para a próxima peça. O aço mais caro é o que você joga fora.',
+      d: 'Corte planejado sem otimização deixa retalho grande demais para descartar e pequeno demais para a próxima peça. O aço mais caro é o que você joga fora.',
     },
     {
-      t: 'Ninguém sabe onde está o pedido',
-      d: 'A OP está "na produção" — mas em qual posto, há quanto tempo, e vai atrasar? A resposta costuma vir do encarregado, de memória.',
+      t: 'O andamento do pedido só existe no chão de fábrica',
+      d: 'A OP está "na produção" — mas em qual posto, há quanto tempo, e vai atrasar? A resposta existe e está com o encarregado — mas não num painel que o comercial consiga consultar sozinho.',
     },
     {
       t: 'Bloco K é uma corrida contra o prazo',
@@ -84,7 +84,7 @@ export const metalurgicas: Sector = {
     {
       step: '01',
       t: 'Chega o pedido de uma peça sob medida',
-      d: 'O vendedor monta o orçamento puxando a ficha técnica: chapa, espessura, tempo de corte, dobra, solda, usinagem e pintura. O preço sai com a margem já calculada, não no chute.',
+      d: 'O vendedor monta o orçamento puxando a ficha técnica: chapa, espessura, tempo de corte, dobra, solda, usinagem e pintura. O preço sai com a margem já calculada sobre o custo real do processo.',
     },
     {
       step: '02',
@@ -177,7 +177,7 @@ export const moveleiras: Sector = {
     },
     {
       t: 'Sobra de MDF sem controle',
-      d: 'Cada placa mal aproveitada é dinheiro parado no galpão — e retalho que ninguém sabe se dá para usar no próximo ambiente.',
+      d: 'Cada placa mal aproveitada é dinheiro parado no galpão — e retalho sem medida registrada, que não dá para confirmar se serve no próximo ambiente.',
     },
     {
       t: 'O projeto aprovado é redigitado na produção',

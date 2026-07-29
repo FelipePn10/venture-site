@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL, STATIC_ROUTES, MODULE_SLUGS } from "@/lib/site";
+import { motores } from "@/lib/motores";
 
 /**
  * Gera /sitemap.xml com todas as páginas públicas: rotas estáticas + uma
- * entrada por módulo (/modulo/[slug]). Mantém o Google ciente da estrutura
- * completa do site.
+ * entrada por módulo (/modulo/[slug]) e por motor de cálculo (/motor/[slug]).
+ * Mantém o Google ciente da estrutura completa do site.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -23,5 +24,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...moduleEntries];
+  const motorEntries: MetadataRoute.Sitemap = Object.keys(motores).map((slug) => ({
+    url: `${SITE_URL}/motor/${slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticEntries, ...moduleEntries, ...motorEntries];
 }
