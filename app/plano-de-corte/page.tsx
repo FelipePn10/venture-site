@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/plano-de-corte' },
   openGraph: {
     type: 'website',
-    url: 'https://venturerp.com/plano-de-corte',
+    url: '/plano-de-corte',
     title: `${title} · VentureERP`,
     description,
     siteName: 'VentureERP',

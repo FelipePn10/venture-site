@@ -4,7 +4,11 @@
  * e o site inteiro acompanha.
  */
 
-export const SITE_URL = "https://venturerp.com";
+/**
+ * Domínio canônico. Precisa bater com o que a Vercel serve de fato: o apex
+ * (venturerp.com) responde 307 para o www, então o canônico é o www.
+ */
+export const SITE_URL = "https://www.venturerp.com";
 
 export const SITE = {
   name: "VentureERP",

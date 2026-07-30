@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/metalurgicas' },
   openGraph: {
     type: 'website',
-    url: 'https://venturerp.com/metalurgicas',
+    url: '/metalurgicas',
     title: `${title} · VentureERP`,
     description,
     siteName: 'VentureERP',

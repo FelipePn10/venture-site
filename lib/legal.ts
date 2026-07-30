@@ -19,8 +19,8 @@ export const legal = {
 
   // --- Contato geral / domínio ---
   emailContato: 'contato@venturerp.com',
-  dominio: 'venturerp.com',
-  site: 'https://venturerp.com',
+  dominio: 'www.venturerp.com',
+  site: 'https://www.venturerp.com',
 
   // --- Foro de eleição (Termos de Uso) ---
   foro: 'Comarca de Maringá/PR',
