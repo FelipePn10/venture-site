@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
+import { legal } from '@/lib/legal';
 
 export const metadata = { title: 'Status · VentureERP' };
 
@@ -179,7 +180,9 @@ export default async function StatusPage() {
 
       <footer className="border-t border-line bg-paper py-10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[12px] text-muted">
-          <span>© 2026 VentureERP Tecnologia S.A.</span>
+          <span>
+            © 2026 {legal.nomeFantasia} · CNPJ {legal.cnpj} · Maringá/PR, BR
+          </span>
           <span className="flex gap-5">
             <Link href="/">Site</Link>
             <Link href="/privacidade" className="hover:text-moss-700">
